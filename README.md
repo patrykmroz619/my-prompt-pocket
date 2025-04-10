@@ -54,6 +54,12 @@ MyPromptPocket is a robust web application designed to streamline the management
      supabase status -o env > .env
      ```
 
+   - Run database migrations:
+
+     ```bash
+     supabase migration up
+     ```
+
 5. Start the development server:
 
    ```bash
