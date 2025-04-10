@@ -46,6 +46,7 @@ MyPromptPocket solves these problems by providing a centralized, private prompt 
 
 - Defining parameters in prompt content using {{ parameter }} syntax
 - Automatic parameter detection in prompt content
+- Assigning parameter types (Short Text, Long Text)
 - Filling parameter values before copying prompt
 - Validation of entered parameter values
 
@@ -201,6 +202,7 @@ MyPromptPocket solves these problems by providing a centralized, private prompt 
 - User can enter parameters in prompt content using {{ parameter }} syntax
 - System automatically detects and highlights parameters during editing
 - Parameters are visually highlighted in different color
+- User can select parameter type for each detected parameter (Short Text or Long Text)
 - System prevents creating duplicate parameter names
 
 ### US-010: Parameter Filling and Clipboard Copy
@@ -211,6 +213,7 @@ MyPromptPocket solves these problems by providing a centralized, private prompt 
 **Acceptance Criteria**:
 
 - After selecting prompt for use, system displays form with fields for all detected parameters
+- System renders appropriate input type based on parameter type (single-line input for Short Text, multi-line textarea for Long Text)
 - User can enter values for each parameter
 - System validates entered values
 - After filling parameters, user can preview prompt with substituted values
