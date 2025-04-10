@@ -2,19 +2,12 @@
 
 ## Tables
 
-### users
-
-- **id** (uuid): Unique identifier for the user. PRIMARY KEY, DEFAULT uuid_generate_v4()
-- **email** (varchar(255)): User's email address used for login. UNIQUE, NOT NULL
-- **created_at** (timestamptz): When the user account was created. NOT NULL, DEFAULT now()
-- **updated_at** (timestamptz): When the user account was last updated. NOT NULL, DEFAULT now()
-
-_Note: Additional authentication fields will be handled automatically by Supabase Auth._
+_Note: User management and authentication is handled by Supabase Auth using the built-in auth.users table._
 
 ### prompts
 
 - **id** (uuid): Unique identifier for the prompt. PRIMARY KEY, DEFAULT uuid_generate_v4()
-- **user_id** (uuid): The user who owns this prompt. REFERENCES users(id) ON DELETE CASCADE, NOT NULL
+- **user_id** (uuid): The user who owns this prompt. REFERENCES auth.users(id) ON DELETE CASCADE, NOT NULL
 - **name** (varchar(100)): The prompt's name. NOT NULL
 - **description** (varchar(1000)): Optional description of what the prompt does.
 - **content** (text): The actual prompt text content. NOT NULL
@@ -29,7 +22,7 @@ _Constraints:_
 ### tags
 
 - **id** (uuid): Unique identifier for the tag. PRIMARY KEY, DEFAULT uuid_generate_v4()
-- **user_id** (uuid): The user who created this tag. REFERENCES users(id) ON DELETE CASCADE, NOT NULL
+- **user_id** (uuid): The user who created this tag. REFERENCES auth.users(id) ON DELETE CASCADE, NOT NULL
 - **name** (varchar(50)): The tag name. NOT NULL
 - **created_at** (timestamptz): When the tag was created. NOT NULL, DEFAULT now()
 

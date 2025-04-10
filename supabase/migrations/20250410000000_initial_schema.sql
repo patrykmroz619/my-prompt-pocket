@@ -1,36 +1,16 @@
 -- Migration: Initial Schema Creation
 -- Description: Creates the core tables for MyPromptPocket application
--- Tables: users, prompts, tags, prompt_tags
+-- Tables: prompts, tags, prompt_tags
 -- Author: GitHub Copilot
 -- Date: 2025-04-10
 
 -- Enable UUID extension if not already enabled
 create extension if not exists "uuid-ossp";
 
--- Create users table
-create table users (
-    id uuid primary key default uuid_generate_v4(),
-    email varchar(255) unique not null,
-    created_at timestamptz not null default now(),
-    updated_at timestamptz not null default now()
-);
-
--- Enable RLS for users table
-alter table users enable row level security;
-
--- RLS Policies for users table
-create policy "Allow individual user to view own data" on users
-    for select
-    using (auth.uid() = id);
-
-create policy "Allow individual user to update own data" on users
-    for update
-    using (auth.uid() = id);
-
 -- Create prompts table
 create table prompts (
     id uuid primary key default uuid_generate_v4(),
-    user_id uuid not null references users(id) on delete cascade,
+    user_id uuid not null references auth.users(id) on delete cascade,
     name varchar(100) not null,
     description varchar(1000),
     content text not null,
@@ -63,7 +43,7 @@ create policy "Users can delete their own prompts" on prompts
 -- Create tags table
 create table tags (
     id uuid primary key default uuid_generate_v4(),
-    user_id uuid not null references users(id) on delete cascade,
+    user_id uuid not null references auth.users(id) on delete cascade,
     name varchar(50) not null,
     created_at timestamptz not null default now(),
     constraint unique_tag_name_per_user unique (user_id, name)
@@ -125,7 +105,6 @@ create policy "Users can delete prompt_tags for their prompts" on prompt_tags
     ));
 
 -- Create indexes for better query performance
-create index idx_users_email on users using btree (email);
 create index idx_prompts_user_id on prompts using btree (user_id);
 create index idx_prompts_name_user_id on prompts using btree (name, user_id);
 create index idx_tags_user_id on tags using btree (user_id);
@@ -142,11 +121,6 @@ end;
 $$ language plpgsql;
 
 -- Add updated_at triggers
-create trigger set_timestamp_users
-    before update on users
-    for each row
-    execute function handle_updated_at();
-
 create trigger set_timestamp_prompts
     before update on prompts
     for each row
