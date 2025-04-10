@@ -8,7 +8,6 @@
 - [Available Scripts](#available-scripts)
 - [Project Scope](#project-scope)
 - [Project Status](#project-status)
-- [License](#license)
 
 ## Project Description
 
@@ -24,18 +23,44 @@ MyPromptPocket is a robust web application designed to streamline the management
 
 1. Ensure you have [Node.js](https://nodejs.org/en/) version **22.14.0** (as specified in [.nvmrc](.nvmrc)).
 2. Clone the repository:
-   ```
+
+   ```bash
    git clone https://github.com/patrykmroz619/my-prompt-pocket.git
    ```
+
 3. Install dependencies:
-   ```
+
+   ```bash
    npm install
    ```
-4. Start the development server:
-   ```
+
+4. Set up Supabase:
+
+   - Install Supabase CLI globally:
+
+     ```bash
+     npm install -g supabase
+     ```
+
+   - Start Supabase locally:
+
+     ```bash
+     supabase start
+     ```
+
+   - Copy the generated environment variables to `.env`:
+
+     ```bash
+     supabase status -o env > .env
+     ```
+
+5. Start the development server:
+
+   ```bash
    npm run dev
    ```
-5. Open your browser at `http://localhost:4321` to view the application.
+
+6. Open your browser at `http://localhost:4321` to view the application.
 
 ## Available Scripts
 
