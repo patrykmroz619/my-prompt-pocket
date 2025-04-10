@@ -1,301 +1,301 @@
-# Dokument wymagań produktu (PRD) - MyPromptPocket
+# Product Requirements Document (PRD) - MyPromptPocket
 
-## 1. Przegląd produktu
+## 1. Product Overview
 
-MyPromptPocket to aplikacja webowa do zarządzania prywatną biblioteką promptów używanych w komunikacji z modelami sztucznej inteligencji. Aplikacja pozwala użytkownikom na tworzenie, edytowanie, parametryzowanie i organizowanie promptów w efektywny sposób.
+MyPromptPocket is a web application for managing a private library of prompts used in communication with LLMs. The application allows users to create, edit, parameterize, and organize prompts efficiently.
 
-Głównym celem produktu jest zapewnienie użytkownikom wygodnego narzędzia do przechowywania i zarządzania własnymi promptami, które mogą być wykorzystywane w różnych kontekstach pracy z modelami językowymi AI.
+The main goal of the product is to provide users with a convenient tool for storing and managing their own prompts, which can be used in various contexts when working with AI language models.
 
-Aplikacja w wersji MVP będzie dostępna jako rozwiązanie webowe z responsywnym interfejsem, z planami rozwoju w kierunku aplikacji desktopowej w przyszłości.
+The application in its MVP version will be available as a web solution with a responsive interface, with plans for development towards a desktop application in the future.
 
-Docelowi użytkownicy: osoby korzystające z modeli LLM (Large Language Models) w swojej codziennej pracy, w tym profesjonaliści z różnych branż, badacze i naukowcy, twórcy treści, programiści i inżynierowie sztucznej inteligencji oraz entuzjaści AI.
+Target users: people using LLM (Large Language Models) in their daily work, including professionals from various industries, researchers and scientists, content creators, programmers and artificial intelligence engineers, and AI enthusiasts.
 
-Podstawowe funkcje:
+Core features:
 
-- Tworzenie i zarządzanie biblioteką promptów
-- Parametryzacja promptów za pomocą składni {{ parametr }}
-- Kategoryzacja promptów za pomocą systemu tagów
-- Wyszukiwanie promptów po nazwie
-- Wypełnianie wartości parametrów przed kopiowaniem promptów do schowka
-- Ulepszanie promptów przy wsparciu AI
-- Uwierzytelnianie użytkowników za pomocą email/hasło oraz logowania przez Google
+- Creating and managing prompt library
+- Prompt parameterization using {{ parameter }} syntax
+- Categorizing prompts using a tag system
+- Searching prompts by name
+- Filling parameter values before copying prompts to clipboard
+- Improving prompts with AI support
+- User authentication via email/password and Google login
 
-## 2. Problem użytkownika
+## 2. User Problem
 
-Użytkownicy modeli AI często tworzą i wielokrotnie wykorzystują te same lub podobne prompty. Jednak obecnie większość użytkowników nie posiada dedykowanego narzędzia do organizowania i zarządzania tymi promptami, co prowadzi do następujących problemów:
+AI model users often create and repeatedly use the same or similar prompts. However, currently most users don't have a dedicated tool for organizing and managing these prompts, which leads to the following problems:
 
-1. Tracenie czasu na ponowne tworzenie podobnych promptów
-2. Niespójność w jakości i strukturze promptów używanych do podobnych zadań
-3. Trudność w odnalezieniu wcześniej stworzonych, efektywnych promptów
-4. Brak możliwości łatwej parametryzacji i ponownego wykorzystania promptów w różnych kontekstach
-5. Nieefektywne przechowywanie promptów w różnych miejscach (pliki tekstowe, notatki, dokumenty)
+1. Wasting time on recreating similar prompts
+2. Inconsistency in quality and structure of prompts used for similar tasks
+3. Difficulty in finding previously created, effective prompts
+4. Lack of easy parameterization and reuse of prompts in different contexts
+5. Inefficient prompt storage in various places (text files, notes, documents)
 
-MyPromptPocket rozwiązuje te problemy poprzez dostarczenie scentralizowanej, prywatnej biblioteki promptów z funkcjami parametryzacji, kategoryzacji i szybkiego wyszukiwania.
+MyPromptPocket solves these problems by providing a centralized, private prompt library with parameterization, categorization, and quick search capabilities.
 
-## 3. Wymagania funkcjonalne
+## 3. Functional Requirements
 
-### Zarządzanie promptami
+### Prompt Management
 
-- Tworzenie nowych promptów z polami: nazwa, opis, treść, parametry
-- Edycja istniejących promptów
-- Usuwanie promptów
-- Wyświetlanie szczegółów promptu
-- Kopiowanie promptu do schowka
+- Creating new prompts with fields: name, description, content, parameters
+- Editing existing prompts
+- Deleting prompts
+- Displaying prompt details
+- Copying prompt to clipboard
 
-### Parametryzacja
+### Parameterization
 
-- Definiowanie parametrów w treści promptu za pomocą składni {{ parametr }}
-- Automatyczne wykrywanie parametrów w treści promptu
-- Wypełnianie wartości parametrów przed kopiowaniem promptu
-- Walidacja wprowadzanych wartości parametrów
+- Defining parameters in prompt content using {{ parameter }} syntax
+- Automatic parameter detection in prompt content
+- Filling parameter values before copying prompt
+- Validation of entered parameter values
 
-### Organizacja i wyszukiwanie
+### Organization and Search
 
-- Kategoryzacja promptów za pomocą tagów (system płaski, bez hierarchii)
-- Wyszukiwanie promptów po nazwie
-- Filtrowanie promptów po tagach
+- Categorizing prompts using tags (flat system, no hierarchy)
+- Searching prompts by name
+- Filtering prompts by tags
 
-### Wsparcie AI
+### AI Support
 
-- Generowanie sugestii ulepszeń istniejących promptów
-- Pomoc w tworzeniu nowych promptów
+- Generating improvement suggestions for existing prompts
+- Help in creating new prompts
 
-### Uwierzytelnianie i bezpieczeństwo
+### Authentication and Security
 
-- Rejestracja i logowanie przez email/hasło
-- Integracja z logowaniem przez Google
+- Registration and login via email/password
+- Integration with Google login
 
-### Interfejs użytkownika
+### User Interface
 
-- Responsywny design (RWD)
-- Intuicyjny edytor promptów z podświetlaniem składni
-- System powiadomień o udanym skopiowaniu promptu do schowka
+- Responsive design (RWD)
+- Intuitive prompt editor with syntax highlighting
+- Notification system for successful prompt copying to clipboard
 
-## 4. Granice produktu
+## 4. Product Boundaries
 
-### Co jest w zakresie
+### In Scope
 
-- Webowa aplikacja do zarządzania promptami
-- Prywatna biblioteka promptów dla zalogowanych użytkowników
-- Parametryzacja promptów za pomocą {{ parametr }}
-- Podstawowe funkcje edycji i organizacji promptów
-- Interfejs w języku angielskim
+- Web application for prompt management
+- Private prompt library for logged-in users
+- Prompt parameterization using {{ parameter }}
+- Basic prompt editing and organization features
+- English language interface
 
-### Co jest poza zakresem
+### Out of Scope
 
-- Wersja desktopowa (planowana w przyszłości)
-- Wersjonowanie promptów
-- Archiwizacja promptów
-- Współdzielenie promptów między użytkownikami
-- Wielojęzyczny interfejs użytkownika
-- Hierarchiczna struktura kategorii/folderów
+- Desktop version (planned for future)
+- Prompt versioning
+- Prompt archiving
+- Prompt sharing between users
+- Multilingual user interface
+- Hierarchical category/folder structure
 
-## 5. Historyjki użytkowników
+## 5. User Stories
 
-### US-001: Rejestracja użytkownika
+### US-001: User Registration
 
-**Tytuł**: Rejestracja nowego konta
-**Opis**: Jako nowy użytkownik, chcę utworzyć konto w aplikacji, aby móc korzystać z moich prywatnych promptów.
+**Title**: New Account Registration
+**Description**: As a new user, I want to create an account in the application to be able to use my private prompts.
 
-**Kryteria akceptacji**:
+**Acceptance Criteria**:
 
-- Użytkownik może wypełnić formularz rejestracji z polami: adres email, hasło, powtórz hasło
-- System waliduje poprawność adresu email
-- System wymaga hasła o odpowiedniej sile (min. 8 znaków, zawierające wielkie i małe litery, cyfry)
-- Po pomyślnej rejestracji, użytkownik otrzymuje komunikat potwierdzający
-- Użytkownik może zalogować się na nowo utworzone konto
+- User can fill out registration form with fields: email address, password, repeat password
+- System validates email address correctness
+- System requires strong password (min. 8 characters, containing upper and lower case letters, numbers)
+- After successful registration, user receives confirmation message
+- User can log in to newly created account
 
-### US-002: Logowanie przez email/hasło
+### US-002: Email/Password Login
 
-**Tytuł**: Logowanie za pomocą danych uwierzytelniających
-**Opis**: Jako zarejestrowany użytkownik, chcę zalogować się do systemu za pomocą mojego emaila i hasła, aby uzyskać dostęp do moich promptów.
+**Title**: Login using credentials
+**Description**: As a registered user, I want to log in to the system using my email and password to access my prompts.
 
-**Kryteria akceptacji**:
+**Acceptance Criteria**:
 
-- Użytkownik może wprowadzić adres email i hasło na stronie logowania
-- System weryfikuje poprawność danych
-- Po poprawnym logowaniu, użytkownik jest przekierowany do strony głównej aplikacji
-- W przypadku błędnych danych, system wyświetla odpowiedni komunikat
+- User can enter email and password on login page
+- System verifies data correctness
+- After successful login, user is redirected to application main page
+- In case of incorrect data, system displays appropriate message
 
-### US-003: Logowanie przez Google
+### US-003: Google Login
 
-**Tytuł**: Logowanie za pomocą konta Google
-**Opis**: Jako użytkownik, chcę zalogować się do aplikacji za pomocą mojego konta Google, aby nie musieć pamiętać dodatkowych danych logowania.
+**Title**: Login using Google account
+**Description**: As a user, I want to log in to the application using my Google account to avoid remembering additional login credentials.
 
-**Kryteria akceptacji**:
+**Acceptance Criteria**:
 
-- Na stronie logowania dostępny jest przycisk "Zaloguj się przez Google"
-- Po kliknięciu przycisku, użytkownik jest przekierowany do strony logowania Google
-- Po pomyślnym uwierzytelnieniu w Google, użytkownik jest automatycznie zalogowany do aplikacji
-- Jeśli to pierwszy login przez Google, system tworzy nowe konto powiązane z kontem Google
+- "Login with Google" button is available on login page
+- After clicking the button, user is redirected to Google login page
+- After successful Google authentication, user is automatically logged into application
+- If it's first Google login, system creates new account linked to Google account
 
-### US-004: Wylogowanie
+### US-004: Logout
 
-**Tytuł**: Wylogowanie z aplikacji
-**Opis**: Jako zalogowany użytkownik, chcę wylogować się z aplikacji, aby zabezpieczyć moje dane.
+**Title**: Application logout
+**Description**: As a logged-in user, I want to log out of the application to secure my data.
 
-**Kryteria akceptacji**:
+**Acceptance Criteria**:
 
-- W interfejsie dostępna jest opcja wylogowania
-- Po wybraniu opcji wylogowania, sesja użytkownika jest zamykana
-- Użytkownik jest przekierowany do strony logowania
-- Ponowny dostęp do danych wymaga zalogowania
+- Logout option is available in interface
+- After selecting logout option, user session is closed
+- User is redirected to login page
+- Renewed access to data requires logging in
 
-### US-005: Dodawanie nowego promptu
+### US-005: Adding New Prompt
 
-**Tytuł**: Tworzenie nowego promptu
-**Opis**: Jako użytkownik, chcę dodać nowy prompt do mojej biblioteki, aby móc go później wykorzystać.
+**Title**: Creating new prompt
+**Description**: As a user, I want to add a new prompt to my library to use it later.
 
-**Kryteria akceptacji**:
+**Acceptance Criteria**:
 
-- Dostępny jest formularz dodawania nowego promptu
-- Użytkownik może wprowadzić nazwę, opis i treść promptu
-- System automatycznie wykrywa parametry w składni {{ parametr }}
-- Użytkownik może dodać tagi do promptu
-- Po zapisaniu, prompt jest widoczny w bibliotece użytkownika
+- New prompt form is available
+- User can enter name, description, and prompt content
+- System automatically detects parameters in {{ parameter }} syntax
+- User can add tags to prompt
+- After saving, prompt is visible in user's library
 
-### US-006: Edycja promptu
+### US-006: Editing Prompt
 
-**Tytuł**: Modyfikacja istniejącego promptu
-**Opis**: Jako użytkownik, chcę edytować istniejące prompty, aby dostosować je do zmieniających się potrzeb.
+**Title**: Modifying existing prompt
+**Description**: As a user, I want to edit existing prompts to adapt them to changing needs.
 
-**Kryteria akceptacji**:
+**Acceptance Criteria**:
 
-- Użytkownik może wybrać prompt do edycji
-- System wyświetla formularz z aktualnymi danymi promptu
-- Użytkownik może modyfikować wszystkie pola promptu
-- System dynamicznie aktualizuje listę wykrytych parametrów podczas edycji
-- Po zapisaniu zmian, prompt jest aktualizowany w bibliotece
+- User can select prompt for editing
+- System displays form with current prompt data
+- User can modify all prompt fields
+- System dynamically updates detected parameters list during editing
+- After saving changes, prompt is updated in library
 
-### US-007: Usuwanie promptu
+### US-007: Deleting Prompt
 
-**Tytuł**: Usuwanie promptu z biblioteki
-**Opis**: Jako użytkownik, chcę usunąć niepotrzebne prompty, aby utrzymać porządek w mojej bibliotece.
+**Title**: Deleting prompt from library
+**Description**: As a user, I want to delete unnecessary prompts to maintain order in my library.
 
-**Kryteria akceptacji**:
+**Acceptance Criteria**:
 
-- Użytkownik może wybrać opcję usunięcia promptu
-- System wyświetla komunikat z prośbą o potwierdzenie
-- Po potwierdzeniu, prompt jest trwale usuwany z biblioteki
-- System wyświetla potwierdzenie pomyślnego usunięcia
+- User can select prompt deletion option
+- System displays confirmation message
+- After confirmation, prompt is permanently deleted from library
+- System displays successful deletion confirmation
 
-### US-008: Przeglądanie szczegółów promptu
+### US-008: Viewing Prompt Details
 
-**Tytuł**: Wyświetlanie szczegółów promptu
-**Opis**: Jako użytkownik, chcę zobaczyć szczegóły wybranego promptu, aby zapoznać się z jego zawartością i parametrami.
+**Title**: Displaying prompt details
+**Description**: As a user, I want to see selected prompt details to review its content and parameters.
 
-**Kryteria akceptacji**:
+**Acceptance Criteria**:
 
-- Użytkownik może wybrać prompt z listy
-- System wyświetla szczegóły promptu: nazwę, opis, treść, parametry i tagi
-- Parametry są wyróżnione w treści promptu
-- Interfejs pokazuje datę utworzenia promptu
+- User can select prompt from list
+- System displays prompt details: name, description, content, parameters, and tags
+- Parameters are highlighted in prompt content
+- Interface shows prompt creation date
 
-### US-009: Parametryzacja promptu
+### US-009: Prompt Parameterization
 
-**Tytuł**: Tworzenie promptu z parametrami
-**Opis**: Jako użytkownik, chcę zdefiniować parametry w moim prompcie, aby móc go dostosować do różnych kontekstów.
+**Title**: Creating prompt with parameters
+**Description**: As a user, I want to define parameters in my prompt to adapt it to different contexts.
 
-**Kryteria akceptacji**:
+**Acceptance Criteria**:
 
-- Użytkownik może wpisać parametry w treści promptu używając składni {{ parametr }}
-- System automatycznie wykrywa i wyróżnia parametry podczas edycji
-- Parametry są wizualnie wyróżnione innym kolorem
-- System nie pozwala na tworzenie duplikatów nazw parametrów
+- User can enter parameters in prompt content using {{ parameter }} syntax
+- System automatically detects and highlights parameters during editing
+- Parameters are visually highlighted in different color
+- System prevents creating duplicate parameter names
 
-### US-010: Wypełnianie parametrów i kopiowanie do schowka
+### US-010: Parameter Filling and Clipboard Copy
 
-**Tytuł**: Wypełnianie parametrów i kopiowanie promptu
-**Opis**: Jako użytkownik, chcę wypełnić wartości parametrów i skopiować gotowy prompt do schowka, aby móc go wkleić do modelu LLM.
+**Title**: Filling parameters and copying prompt
+**Description**: As a user, I want to fill parameter values and copy ready prompt to clipboard to paste it into LLM model.
 
-**Kryteria akceptacji**:
+**Acceptance Criteria**:
 
-- Po wybraniu promptu do użycia, system wyświetla formularz z polami dla wszystkich wykrytych parametrów
-- Użytkownik może wprowadzić wartości dla każdego parametru
-- System waliduje wprowadzone wartości
-- Po wypełnieniu parametrów, użytkownik może podejrzeć prompt z podstawionymi wartościami
-- Dostępny jest przycisk "Kopiuj do schowka"
-- Po kliknięciu przycisku, prompt z podstawionymi parametrami jest kopiowany do schowka systemowego
-- System wyświetla komunikat o pomyślnym skopiowaniu
-- Użytkownik może wkleić skopiowany tekst w dowolnym miejscu
+- After selecting prompt for use, system displays form with fields for all detected parameters
+- User can enter values for each parameter
+- System validates entered values
+- After filling parameters, user can preview prompt with substituted values
+- "Copy to Clipboard" button is available
+- After clicking button, prompt with substituted parameters is copied to system clipboard
+- System displays successful copy message
+- User can paste copied text anywhere
 
-### US-011: Kategoryzacja promptów za pomocą tagów
+### US-011: Prompt Categorization Using Tags
 
-**Tytuł**: Dodawanie tagów do promptów
-**Opis**: Jako użytkownik, chcę organizować moje prompty za pomocą tagów, aby łatwiej je odnajdywać.
+**Title**: Adding tags to prompts
+**Description**: As a user, I want to organize my prompts using tags to find them easier.
 
-**Kryteria akceptacji**:
+**Acceptance Criteria**:
 
-- Podczas tworzenia lub edycji promptu użytkownik może dodawać tagi
-- System sugeruje istniejące tagi używane wcześniej przez użytkownika
-- Użytkownik może dodawać wiele tagów do jednego promptu
-- Tagi są widoczne na liście promptów oraz w szczegółach promptu
+- During prompt creation or editing user can add tags
+- System suggests existing tags previously used by user
+- User can add multiple tags to one prompt
+- Tags are visible on prompt list and in prompt details
 
-### US-012: Wyszukiwanie promptów
+### US-012: Searching Prompts
 
-**Tytuł**: Wyszukiwanie promptów po nazwie
-**Opis**: Jako użytkownik, chcę szybko znaleźć prompt po jego nazwie, aby zaoszczędzić czas.
+**Title**: Searching prompts by name
+**Description**: As a user, I want to quickly find prompt by its name to save time.
 
-**Kryteria akceptacji**:
+**Acceptance Criteria**:
 
-- Dostępne jest pole wyszukiwania
-- System wyszukuje prompty zawierające wprowadzoną frazę w nazwie
-- Wyniki wyszukiwania są aktualizowane na bieżąco podczas pisania
-- Jeśli nie znaleziono żadnych wyników, system wyświetla odpowiedni komunikat
+- Search field is available
+- System searches prompts containing entered phrase in name
+- Search results are updated in real-time while typing
+- If no results found, system displays appropriate message
 
-### US-013: Filtrowanie promptów po tagach
+### US-013: Filtering Prompts by Tags
 
-**Tytuł**: Filtrowanie biblioteki promptów po tagach
-**Opis**: Jako użytkownik, chcę filtrować moje prompty po tagach, aby szybko znaleźć prompty z określonej kategorii.
+**Title**: Filtering prompt library by tags
+**Description**: As a user, I want to filter my prompts by tags to quickly find prompts from specific category.
 
-**Kryteria akceptacji**:
+**Acceptance Criteria**:
 
-- Interfejs wyświetla listę wszystkich używanych tagów
-- Użytkownik może wybrać jeden lub więcej tagów do filtrowania
-- System wyświetla tylko prompty pasujące do wybranych tagów
-- Użytkownik może łatwo usunąć wybrane filtry
+- Interface displays list of all used tags
+- User can select one or more tags for filtering
+- System displays only prompts matching selected tags
+- User can easily remove selected filters
 
-### US-014: Ulepszanie promptu z pomocą AI
+### US-014: Improving Prompt with AI
 
-**Tytuł**: Uzyskiwanie sugestii ulepszeń od AI
-**Opis**: Jako użytkownik, chcę poprosić AI o ulepszenie mojego promptu, aby był bardziej skuteczny.
+**Title**: Getting improvement suggestions from AI
+**Description**: As a user, I want to ask AI to improve my prompt to make it more effective.
 
-**Kryteria akceptacji**:
+**Acceptance Criteria**:
 
-- Podczas tworzenia lub edycji promptu dostępna jest opcja "Uzyskaj sugestie AI"
-- Po wybraniu opcji, system generuje sugestie ulepszeń dla danego promptu
-- Użytkownik może przejrzeć sugestie i wybrać, które z nich chce zastosować
-- Użytkownik może edytować sugestie przed ich zastosowaniem
-- Po zastosowaniu sugestii, prompt jest aktualizowany
+- During prompt creation or editing "Get AI suggestions" option is available
+- After selecting option, system generates improvement suggestions for given prompt
+- User can review suggestions and choose which ones to apply
+- User can edit suggestions before applying them
+- After applying suggestions, prompt is updated
 
-### US-016: Podgląd biblioteki promptów
+### US-016: Prompt Library Overview
 
-**Tytuł**: Przeglądanie listy promptów
-**Opis**: Jako użytkownik, chcę widzieć listę wszystkich moich promptów, aby mieć przegląd mojej kolekcji.
+**Title**: Browsing prompt list
+**Description**: As a user, I want to see list of all my prompts to have overview of my collection.
 
-**Kryteria akceptacji**:
+**Acceptance Criteria**:
 
-- Po zalogowaniu, użytkownik widzi listę wszystkich swoich promptów
-- Lista zawiera podstawowe informacje o każdym prompcie (nazwa, fragment opisu, tagi)
-- Lista jest podzielona na strony, jeśli liczba promptów jest duża
+- After logging in, user sees list of all their prompts
+- List contains basic information about each prompt (name, description excerpt, tags)
+- List is paginated if number of prompts is large
 
-### US-017: Responsywny interfejs
+### US-017: Responsive Interface
 
-**Tytuł**: Korzystanie z aplikacji na różnych urządzeniach
-**Opis**: Jako użytkownik, chcę korzystać z aplikacji zarówno na komputerze jak i urządzeniach mobilnych, aby mieć dostęp do moich promptów niezależnie od używanego sprzętu.
+**Title**: Using application on different devices
+**Description**: As a user, I want to use the application both on computer and mobile devices to have access to my prompts regardless of device used.
 
-**Kryteria akceptacji**:
+**Acceptance Criteria**:
 
-- Interfejs aplikacji dostosowuje się do różnych rozmiarów ekranów
-- Wszystkie funkcje są dostępne zarówno na urządzeniach mobilnych jak i desktopowych
-- Elementy interfejsu są wygodne w obsłudze na ekranach dotykowych
-- Tekst jest czytelny na małych ekranach
+- Application interface adapts to different screen sizes
+- All features are available on both mobile and desktop devices
+- Interface elements are convenient to use on touch screens
+- Text is readable on small screens
 
-## 6. Metryki sukcesu
+## 6. Success Metrics
 
-### Kryteria oceny MVP
+### MVP Evaluation Criteria
 
-- Użyteczność w prywatnym zastosowaniu (główne kryterium)
-- Łatwość tworzenia i parametryzacji promptów
-- Szybkość wyszukiwania i kopiowania promptów do schowka
-- Efektywność sugestii AI do ulepszania promptów
+- Usefulness in private use (main criterion)
+- Ease of creating and parameterizing prompts
+- Speed of searching and copying prompts to clipboard
+- Effectiveness of AI suggestions for improving prompts
