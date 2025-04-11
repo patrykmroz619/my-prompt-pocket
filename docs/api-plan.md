@@ -192,13 +192,8 @@ Gets AI-generated improvement suggestions for a prompt.
 
 ```json
 {
-  "suggestions": [
-    {
-      "improved_content": "Improved prompt content",
-      "explanation": "Explanation of improvements"
-    }
-  ],
-  "original_content": "Original prompt content"
+  "improved_content": "Improved prompt content",
+  "explanation": "Explanation of improvements"
 }
 ```
 
@@ -221,8 +216,9 @@ Retrieves all tags belonging to the authenticated user.
     {
       "id": "uuid",
       "name": "Tag Name",
+      "prompt_count": 5,
       "created_at": "2023-06-15T10:30:00Z",
-      "prompt_count": 5
+      "updated_at": "2023-06-15T10:30:00Z"
     }
   ]
 }
@@ -246,8 +242,9 @@ Creates a new tag.
 {
   "id": "uuid",
   "name": "Tag Name",
+  "prompt_count": 0,
   "created_at": "2023-06-15T10:30:00Z",
-  "prompt_count": 0
+  "updated_at": "2023-06-15T10:30:00Z"
 }
 ```
 
@@ -274,6 +271,7 @@ Updates a tag name.
 {
   "id": "uuid",
   "name": "Updated Tag Name",
+  "prompt_count": 0,
   "created_at": "2023-06-15T10:30:00Z",
   "updated_at": "2023-06-15T11:45:00Z"
 }
