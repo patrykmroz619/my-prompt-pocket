@@ -78,3 +78,9 @@ When introducing changes to the project, always follow the directory structure b
 - Implement dark mode with the dark: variant
 - Use responsive variants (sm:, md:, lg:, etc.) for adaptive designs
 - Leverage state variants (hover:, focus:, active:, etc.) for interactive elements
+
+## BACKEND AND DATABASE
+
+- Use Supabase for backend services, including authentication and database interactions.
+- Use Zod schemas for request validation
+- Use Supabase from context.locals in Astro routes instead of importing supabaseClient directly
