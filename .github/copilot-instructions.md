@@ -18,6 +18,8 @@ When introducing changes to the project, always follow the directory structure b
 - "./src/pages" - Astro pages
 - "./src/shared" - shared code between modules
 - "./src/shared/components" - reusable components
+- "./src/shared/hooks" - reusable hooks
+- "./src/shared/utils" - reusable utility functions
 - "./src/shared/types" - reusable types
 - "./src/modules" - module-specific code
 - "./src/modules/prompts" - code related to prompts
