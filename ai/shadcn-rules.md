@@ -37,7 +37,7 @@ Example usage of components:
 
 ## Installing Additional Components
 
-Many other components are available, but are not currently installed. A complete list can be found at https://ui.shadcn.com/r
+Many other components are available, but are not currently installed. A complete list can be found at <https://ui.shadcn.com/r>
 
 To install a new component, use the shadcn CLI.
 

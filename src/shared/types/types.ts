@@ -50,9 +50,9 @@ export interface CreatePromptCommand {
 }
 
 export interface UpdatePromptCommand {
-  name?: string;
+  name: string;
   description?: string | null;
-  content?: string;
+  content: string;
   parameters?: PromptParameter[]; // Parameter definitions
   tags?: string[]; // Array of tag IDs
 }

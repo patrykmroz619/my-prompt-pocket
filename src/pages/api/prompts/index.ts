@@ -1,13 +1,9 @@
+import { MissingParameterDefinitionsError, PromptNameConflictError, UndefinedParametersError } from "@modules/prompts/exceptions/prompt.exceptions";
+import { createPromptSchema } from "@modules/prompts/schemas/create-prompt.schema";
+import { promptService } from "@modules/prompts/services/prompt.service";
 import type { APIRoute } from "astro";
 import { z } from "zod";
 
-import {
-  createPromptSchema,
-  promptService,
-  MissingParameterDefinitionsError,
-  PromptNameConflictError,
-  UndefinedParametersError
-} from "@modules/prompts";
 
 export const POST: APIRoute = async ({ request, locals }) => {
   try {

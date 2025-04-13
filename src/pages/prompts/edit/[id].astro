@@ -1,0 +1,14 @@
+---
+import Layout from "@shared/layouts/Layout.astro";
+import { EditPromptPage } from "@modules/prompts/components/EditPromptPage";
+
+const { id } = Astro.params;
+
+if (!id) {
+  return Astro.redirect("/prompts");
+}
+---
+
+<Layout>
+  <EditPromptPage promptId={id} client:load />
+</Layout>
