@@ -2,7 +2,7 @@
 
 ## 1. UI Structure Overview
 
-This application is organized around an authenticated main layout with a left sidebar for navigation and a content area displaying various prompt-related views. Dedicated forms, modals, and states handle prompt creation, editing, parameter filling, and AI suggestions. Responsive design ensures usability on different devices.
+This application is organized around an authenticated main layout with a top navigation bar header and a content area displaying various prompt-related views. Dedicated forms, modals, and states handle prompt creation, editing, parameter filling, and AI suggestions. Responsive design ensures usability on different devices.
 
 ## 2. List of Views
 
@@ -19,9 +19,9 @@ This application is organized around an authenticated main layout with a left si
 
 - **Layout**
   **Path**: (encapsulates application routes)
-  **Purpose**: Provides a consistent wrapper with a sidebar for navigation, top area or brand.
+  **Purpose**: Provides a consistent wrapper with a top navigation bar for navigation, branding, and user actions.
   **Key Information**: Links: "Prompts library", "Create new prompt". Highlights active route.
-  **Key Components**: Sidebar, brand/logo area, navigation links, logged-in user, logout button.
+  **Key Components**: Top bar header with navigation, brand/logo area, navigation links, logged-in user info, logout button.
   **Accessibility & Security**: Proper ARIA states for active navigation.
 
 ### 2.3 Prompts Library (List)
@@ -97,12 +97,12 @@ This application is organized around an authenticated main layout with a left si
 
 ## 4. Navigation Layout and Structure
 
-- **Sidebar**: Displays links to main views:
-  - Prompts Library (`/prompts`)
-  - Create New Prompt (`/prompts/create`)
-  - Information about logged-in user
-  - Logout action
-- **Header Area**: Shows app name/logo, optional user profile info.
+- **Top Bar Header**: Displays:
+  - App logo/name (left side)
+  - Main navigation links:
+    - Prompts Library (`/prompts`)
+    - Create New Prompt (`/prompts/create`)
+  - Information about logged-in user and logout action (right side)
 - **Routes**:
   - `/login`, `/register`: Unauthenticated routes
   - `/prompts`: Authenticated route for the prompts library
@@ -120,6 +120,6 @@ This application is organized around an authenticated main layout with a left si
 - **TagMultiSelect**: Combobox component for adding/removing tags.
 - **DeleteConfirmationModal**: Confirms destructive actions.
 - **NotificationToasts**: Show success/error messages with minimal user interruption (e.g., form errors, API failures).
-- **SidebarNavigation**: Renders main nav items and highlights active path.
+- **TopBarNavigation**: Renders main navigation items, logo, and user actions in the header.
 
 This architecture satisfies the main user stories by supporting prompt organization, parameter handling, AI improvements, and straightforward, secure authentication. It also addresses accessibility, responsiveness, and potential error conditions (via modals and notifications).
