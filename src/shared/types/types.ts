@@ -1,3 +1,8 @@
+export interface IUser {
+  id: string;
+  email: string | undefined;
+}
+
 /**
  * Base types for parameter handling
  */

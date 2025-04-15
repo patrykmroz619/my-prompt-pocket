@@ -1,6 +1,9 @@
 ---
 import "@shared/styles/global.css";
 import { Toaster } from "@shared/components/ui/sonner";
+import { MainLayout } from "./MainLayout";
+
+const pathname = Astro.url.pathname;
 ---
 
 <!doctype html>
@@ -13,10 +16,18 @@ import { Toaster } from "@shared/components/ui/sonner";
     <title>MyPromptPocket</title>
   </head>
   <body>
-    <main>
-      <slot />
-    </main>
-    <Toaster client:load richColors closeButton />
+    {
+      pathname === "/login" ? (
+        <main>
+          <slot />
+        </main>
+      ) : (
+        <MainLayout client:only="react" currentPath={pathname}>
+          <slot />
+        </MainLayout>
+      )
+    }
+    <Toaster client:only="react" richColors closeButton />
   </body>
 </html>
 
