@@ -17,11 +17,121 @@ The API manages the following main resources that correspond to database tables:
 
 ### 2.1 Authentication
 
-Authentication is managed directly through Supabase Auth client-side SDK, supporting:
+Authentication is managed through Supabase Auth using the `@supabase/ssr` package with server-side API endpoints for core authentication operations:
 
-- Email/password registration and login
-- Google OAuth integration
-- Session management
+#### POST /api/auth/login
+
+Handles user login with email/password credentials.
+
+**Request:**
+
+```json
+{
+  "email": "user@example.com",
+  "password": "securepassword"
+}
+```
+
+**Response:** 200 OK
+
+```json
+{
+  "user": {
+    "id": "uuid",
+    "email": "user@example.com",
+    "app_metadata": {},
+    "user_metadata": {},
+    "aud": "authenticated"
+  }
+}
+```
+
+**Errors:**
+
+- 400 Bad Request: Invalid credentials
+- 429 Too Many Requests: Rate limit exceeded
+
+#### POST /api/auth/register
+
+Registers a new user account.
+
+**Request:**
+
+```json
+{
+  "email": "newuser@example.com",
+  "password": "securepassword"
+}
+```
+
+**Response:** 200 OK
+
+```json
+{
+  "user": {
+    "id": "uuid",
+    "email": "newuser@example.com",
+    "app_metadata": {},
+    "user_metadata": {},
+    "aud": "authenticated",
+    "confirmation_sent_at": "2023-06-15T10:30:00Z"
+  }
+}
+```
+
+**Errors:**
+
+- 400 Bad Request: Invalid input or password requirements not met
+- 409 Conflict: Email already registered
+
+#### POST /api/auth/logout
+
+Signs out the current user.
+
+**Response:** 200 OK
+
+**Errors:**
+
+- 401 Unauthorized: No active session
+
+#### POST /api/auth/forgot-password
+
+Initiates the password reset process by sending a reset link to the user's email.
+
+**Request:**
+
+```json
+{
+  "email": "user@example.com"
+}
+```
+
+**Response:** 200 OK (Indicates email sent, even if user doesn't exist to prevent enumeration)
+
+**Errors:**
+
+- 400 Bad Request: Invalid email format
+- 429 Too Many Requests: Rate limit exceeded
+
+#### POST /api/auth/reset-password
+
+Updates the user's password. This endpoint is intended to be called after the user has clicked the reset link in their email and Supabase has authenticated them via a temporary session/token (usually handled via cookies set during the redirect from the email link).
+
+**Request:**
+
+```json
+{
+  "password": "newSecurePassword"
+}
+```
+
+**Response:** 200 OK
+
+**Errors:**
+
+- 400 Bad Request: Invalid input (e.g., password doesn't meet requirements)
+- 401 Unauthorized: User is not authenticated via the reset token (e.g., token expired or invalid)
+- 429 Too Many Requests: Rate limit exceeded
 
 ### 2.2 Prompts
 

@@ -6,7 +6,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "start": "astro preview",
-    "supabase": "supabase start",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
     "astro": "astro"
   },
   "dependencies": {

@@ -4,7 +4,7 @@
 
 The application uses an Astro-based architecture with React components for interactive parts, ensuring optimal performance while maintaining interactivity where needed.
 
-### Main technologies:
+### Main technologies
 
 - **Astro 5** - Framework for creating fast websites with minimal JavaScript, using static rendering and island architecture.
 - **React 19** - Library for building interactive UI components, used selectively only in places requiring interactivity.
@@ -16,7 +16,7 @@ The application uses an Astro-based architecture with React components for inter
 
 Supabase serves as a comprehensive backend solution, eliminating the need to build a custom API and manage infrastructure.
 
-### Key features:
+### Key features
 
 - **PostgreSQL Database** - Efficient and reliable relational database with extensions for spatial operations, full-text search, and JSON.
 - **SDK for multiple languages** - Ready-to-use client libraries acting as Backend-as-a-Service, enabling database interaction directly from the frontend.
@@ -27,7 +27,7 @@ Supabase serves as a comprehensive backend solution, eliminating the need to bui
 
 Communication with AI models is handled through Openrouter.ai, providing flexibility in model selection and cost control.
 
-### Advantages of this approach:
+### Advantages of this approach
 
 - **Access to multiple providers** - The platform provides a unified interface to models from various providers (OpenAI, Anthropic, Google, etc.), allowing testing and selection of optimal solutions.
 - **Cost optimization** - Ability to set spending limits on API keys and select models with the best price-to-performance ratio for specific applications.
@@ -35,7 +35,7 @@ Communication with AI models is handled through Openrouter.ai, providing flexibi
 
 ## 4. CI/CD and Hosting
 
-### Deployment infrastructure:
+### Deployment infrastructure
 
 - **GitHub Actions** - Automated CI/CD workflows that handle testing, building, and deploying the application after each repository change.
 - **DigitalOcean** - Cloud platform for hosting applications via Docker containers, offering good performance at reasonable costs.
