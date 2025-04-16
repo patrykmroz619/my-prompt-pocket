@@ -1,7 +1,11 @@
 ---
 import "@shared/styles/global.css";
 import { Toaster } from "@shared/components/ui/sonner";
-import { MainLayout } from "./MainLayout";
+import { TopHeader } from "./TopHeader";
+import { Logo } from "./Logo";
+import { MainNavigation } from "./MainNavigation";
+import { UserMenu } from "./UserMenu";
+import { MobileNavigation } from "./MobileNavigation";
 
 const pathname = Astro.url.pathname;
 ---
@@ -16,18 +20,19 @@ const pathname = Astro.url.pathname;
     <title>MyPromptPocket</title>
   </head>
   <body>
-    {
-      pathname === "/login" ? (
-        <main>
-          <slot />
-        </main>
-      ) : (
-        <MainLayout client:only="react" currentPath={pathname}>
-          <slot />
-        </MainLayout>
-      )
-    }
-    <Toaster client:only="react" richColors closeButton />
+    <div class="min-h-screen bg-background">
+      <TopHeader>
+        <Logo />
+        <MainNavigation currentPath={pathname} />
+        <div class="grow"></div>
+        <UserMenu client:load />
+        <MobileNavigation client:load currentPath={pathname} />
+      </TopHeader>
+      <div class="p-4">
+        <slot />
+      </div>
+    </div>
+    <Toaster client:load richColors closeButton />
   </body>
 </html>
 

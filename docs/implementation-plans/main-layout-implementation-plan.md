@@ -1,8 +1,8 @@
-# Main Layout Implementation Plan
+# App Layout Implementation Plan
 
 ## 1. Overview
 
-The Main Layout provides a consistent structural wrapper for the entire application, featuring a top navigation bar for branding, navigation links, and user actions. It ensures a consistent user experience across all pages while supporting responsive design for both desktop and mobile devices.
+The App Layout provides a consistent structural wrapper for the entire application, featuring a top navigation bar for branding, navigation links, and user actions. It ensures a consistent user experience across all pages while supporting responsive design for both desktop and mobile devices.
 
 ## 2. Layout Routing
 
@@ -11,7 +11,7 @@ This is a base layout that will encapsulate all authenticated application routes
 ## 3. Component Structure
 
 ```
-MainLayout
+AppLayout
 ├── Header
 │   ├── Logo/Brand
 │   ├── DesktopNavigation
@@ -27,12 +27,12 @@ MainLayout
 
 ## 4. Component Details
 
-### MainLayout
+### AppLayout
 
 - **Description**: Root layout component that wraps the application's authenticated pages
 - **Main elements**: Header component, mobile navigation, and content area
 - **Supported interactions**: None directly
-- **Types**: MainLayoutProps
+- **Types**: AppLayoutProps
 - **Props**: children
 
 ### Header
@@ -102,7 +102,7 @@ interface NavigationItem {
 }
 
 // Component props
-interface MainLayoutProps {
+interface AppLayoutProps {
   children: React.ReactNode;
 }
 
@@ -175,7 +175,7 @@ const useAuth = () => {
 
 ### Mobile Menu State
 
-Use a simple useState hook in the MainLayout:
+Use a simple useState hook in the AppLayout:
 
 ```typescript
 const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -235,7 +235,7 @@ const handleLogout = async () => {
 
 ### Authentication Check
 
-- MainLayout should only be accessible to authenticated users
+- AppLayout should only be accessible to authenticated users
 - If authentication check fails, redirect to login page
 - This can be handled by a route guard or similar mechanism
 
@@ -260,7 +260,7 @@ const handleLogout = async () => {
 
 1. **Create folder structure**
 
-   - Create `src/shared/components/layout/MainLayout` directory
+   - Create `src/shared/components/layout/AppLayout` directory
    - Create `src/shared/hooks/useAuth.ts` file
 
 2. **Implement authentication hook**
@@ -268,7 +268,7 @@ const handleLogout = async () => {
    - Create `useAuth` hook with Supabase integration
    - Implement logout functionality
 
-3. **Create base MainLayout component**
+3. **Create base AppLayout component**
 
    - Set up basic structure with header and content area
    - Implement responsive container
