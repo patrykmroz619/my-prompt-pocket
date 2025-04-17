@@ -8,7 +8,9 @@
     "start": "astro preview",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "vitest run",
+    "test:ui": "vitest --ui"
   },
   "dependencies": {
     "@astrojs/react": "4.2.3",
@@ -42,8 +44,12 @@
   "devDependencies": {
     "@eslint/js": "9.24.0",
     "@tailwindcss/vite": "4.1.3",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
     "@types/react": "19.1.1",
     "@types/react-dom": "19.1.2",
+    "@vitejs/plugin-react": "^4.4.0",
+    "@vitest/ui": "^3.1.1",
     "eslint": "9.24.0",
     "eslint-config-prettier": "10.1.2",
     "eslint-plugin-astro": "1.3.1",
@@ -51,6 +57,7 @@
     "eslint-plugin-react-hooks": "5.2.0",
     "prettier": "3.5.3",
     "prettier-plugin-astro": "0.14.1",
-    "supabase": "2.20.12"
+    "supabase": "2.20.12",
+    "vitest": "^3.1.1"
   }
 }
