@@ -8,14 +8,33 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@shared/components/ui/dropdown-menu";
-import { useAuth } from "@shared/hooks/useAuth";
+import type { IUser } from "@shared/types/types";
 
-export function UserMenu() {
-  let { user, logout } = useAuth();
+interface UserMenuProps {
+  userData: IUser;
+}
 
-  user ||= { id: "id", email: "user@mail.com" };
+export function UserMenu({ userData }: UserMenuProps) {
+  const initials = userData.email ? userData.email.substring(0, 2).toUpperCase() : "U";
 
-  const initials = user.email ? user.email.substring(0, 2).toUpperCase() : "U";
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        window.location.href = "/auth/login";
+      } else {
+        throw new Error("Logout failed");
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   return (
     <DropdownMenu>
@@ -25,7 +44,7 @@ export function UserMenu() {
             <AvatarFallback className="rounded-lg">{initials}</AvatarFallback>
           </Avatar>
           <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate text-xs">{user.email}</span>
+            <span className="truncate text-xs">{userData.email}</span>
           </div>
           <ChevronsUpDown className="ml-auto size-4" />
         </div>
@@ -42,7 +61,7 @@ export function UserMenu() {
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
               {/* <span className="truncate font-semibold">User</span> */}
-              <span className="truncate text-xs">{user.email}</span>
+              <span className="truncate text-xs">{userData.email}</span>
             </div>
           </div>
         </DropdownMenuLabel>
@@ -52,7 +71,7 @@ export function UserMenu() {
           <User2 />
           Account
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={logout} color="red">
+        <DropdownMenuItem onClick={handleLogout} color="red">
           <LogOut />
           Log out
         </DropdownMenuItem>

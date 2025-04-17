@@ -8,6 +8,7 @@ import { UserMenu } from "./UserMenu";
 import { MobileNavigation } from "./MobileNavigation";
 
 const pathname = Astro.url.pathname;
+const { user } = Astro.locals;
 ---
 
 <!doctype html>
@@ -25,8 +26,8 @@ const pathname = Astro.url.pathname;
         <Logo />
         <MainNavigation currentPath={pathname} />
         <div class="grow"></div>
-        <UserMenu client:load />
-        <MobileNavigation client:load currentPath={pathname} />
+        <UserMenu client:load userData={user} />
+        <MobileNavigation client:load userData={user} />
       </TopHeader>
       <div class="p-4">
         <slot />

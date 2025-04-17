@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Library, PlusCircle, MenuIcon, User2, LogOut, Plus, LibraryIcon } from "lucide-react";
+import { MenuIcon, User2, LogOut } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,20 +8,35 @@ import {
   DropdownMenuTrigger,
 } from "@shared/components/ui/dropdown-menu";
 import { Button } from "@shared/components/ui/button";
-import { useAuth } from "@shared/hooks/useAuth";
 import { Avatar, AvatarFallback } from "@shared/components/ui/avatar";
 import { navigationItems } from "../navigationItems";
+import type { IUser } from "@shared/types/types";
 
 interface MobileNavigationProps {
-  currentPath: string;
+  userData: IUser;
 }
 
-export function MobileNavigation({ currentPath }: MobileNavigationProps) {
-  let { user, logout } = useAuth();
+export function MobileNavigation({ userData }: MobileNavigationProps) {
+  const initials = userData.email ? userData.email.substring(0, 2).toUpperCase() : "U";
 
-  user ||= { id: "id", email: "user@mail.com" };
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-  const initials = user.email ? user.email.substring(0, 2).toUpperCase() : "U";
+      if (response.ok) {
+        window.location.href = "/auth/login";
+      } else {
+        throw new Error("Logout failed");
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   return (
     <>
@@ -40,8 +54,7 @@ export function MobileNavigation({ currentPath }: MobileNavigationProps) {
                 <AvatarFallback className="rounded-lg">{initials}</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                {/* <span className="truncate font-semibold">User</span> */}
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate text-xs">{userData.email}</span>
               </div>
             </div>
           </DropdownMenuLabel>
@@ -60,7 +73,7 @@ export function MobileNavigation({ currentPath }: MobileNavigationProps) {
             <User2 />
             Account
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={logout} color="red">
+          <DropdownMenuItem onClick={handleLogout} color="red">
             <LogOut />
             Log out
           </DropdownMenuItem>

@@ -1,0 +1,24 @@
+---
+import { createSupabaseServerInstance } from "@shared/db/supabase.client";
+
+// This page handles the OAuth callback
+export const prerender = false;
+
+const requestUrl = new URL(Astro.url);
+const code = requestUrl.searchParams.get("code");
+
+if (code) {
+  const supabase = createSupabaseServerInstance({ cookies: Astro.cookies, headers: Astro.request.headers });
+
+  const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+  if (error) {
+    console.error("Auth callback error:", error.message);
+    return redirect(`/auth/login?error=${encodeURIComponent(error.message)}`);
+  }
+
+  return redirect("/");
+} else {
+  return redirect("/auth/login?error=Missing+code+parameter");
+}
+---

@@ -1,0 +1,23 @@
+---
+import AuthLayout from "@shared/components/layout/AuthLayout/AuthLayout.astro";
+import { LoginForm } from "@modules/auth/components/LoginForm";
+
+// Ensure this page is not prerendered to handle dynamic auth state
+export const prerender = false;
+
+// Check if there's an error from the OAuth callback
+const errorParam = Astro.url.searchParams.get("error");
+---
+
+<AuthLayout title="Login | MyPromptPocket">
+  <h1 class="text-center text-2xl font-semibold tracking-tight">Welcome back</h1>
+  <p class="text-center text-sm text-muted-foreground">Enter your credentials to access your account</p>
+
+  {
+    errorParam && (
+      <div class="bg-destructive/15 text-destructive text-sm p-3 rounded-md mb-4">{decodeURIComponent(errorParam)}</div>
+    )
+  }
+
+  <LoginForm client:load />
+</AuthLayout>
