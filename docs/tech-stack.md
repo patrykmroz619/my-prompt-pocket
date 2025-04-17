@@ -39,3 +39,14 @@ Communication with AI models is handled through Openrouter.ai, providing flexibi
 
 - **GitHub Actions** - Automated CI/CD workflows that handle testing, building, and deploying the application after each repository change.
 - **DigitalOcean** - Cloud platform for hosting applications via Docker containers, offering good performance at reasonable costs.
+
+## 5. Testing Tools and Methodology
+
+The application employs a comprehensive testing strategy across multiple layers to ensure quality and reliability.
+
+### Testing tools
+
+- **Vitest** - Fast test runner for unit and integration testing in JavaScript/TypeScript projects.
+- **React Testing Library** - Library for testing React components by simulating user behavior.
+- **Playwright** - End-to-end testing frameworks for simulating real user scenarios in actual browsers.
+- **Mock Service Worker (MSW)** - Tool for intercepting and mocking HTTP requests during testing.
