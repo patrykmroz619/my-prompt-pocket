@@ -7,14 +7,10 @@ import { useState } from "react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@shared/components/ui/form";
 import { Input } from "@shared/components/ui/input";
 import { Button } from "@shared/components/ui/button";
+import { useNavigate } from "@shared/hooks/useNavigate";
 
 // Password validation schema with strength requirements
-const passwordSchema = z
-  .string()
-  .min(8, { message: "Password must be at least 8 characters" })
-  .refine((password) => /[A-Z]/.test(password), { message: "Password must contain at least one uppercase letter" })
-  .refine((password) => /[a-z]/.test(password), { message: "Password must contain at least one lowercase letter" })
-  .refine((password) => /[0-9]/.test(password), { message: "Password must contain at least one number" });
+const passwordSchema = z.string().min(8, { message: "Password must be at least 8 characters" });
 
 // Schema for registration form validation
 const registerSchema = z
@@ -30,12 +26,9 @@ const registerSchema = z
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
-export interface RegisterFormProps {
-  onSubmit?: (email: string, password: string) => Promise<void>;
-}
-
-export function RegisterForm({ onSubmit }: RegisterFormProps) {
+export function RegisterForm() {
   const [passwordStrength, setPasswordStrength] = useState(0);
+  const navigate = useNavigate();
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -112,16 +105,44 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
 
   async function handleSubmit(data: RegisterFormValues) {
     try {
-      // Simulate registration for now
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: data.email,
+          password: data.password,
+        }),
+      });
 
-      if (onSubmit) {
-        await onSubmit(data.email, data.password);
+      const result = await response.json();
+
+      if (!response.ok) {
+        // Handle validation errors or other error messages from the server
+        if (result.details) {
+          // Handle specific field errors if available
+          if (result.details.email?._errors) {
+            form.setError("email", { message: result.details.email._errors[0] });
+          }
+          if (result.details.password?._errors) {
+            form.setError("password", { message: result.details.password._errors[0] });
+          }
+          toast.error("Registration failed: Please check the form for errors");
+        } else {
+          toast.error(result.error || "Failed to register. Please try again.");
+        }
+        return;
       }
 
-      toast.success("Registration successful! Please check your email for verification.");
+      // Registration successful
+      toast.success("Registration successful! You are now logged in.");
+
+      // Automatic redirect to prompts page (or dashboard)
+      navigate.navigate("/");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to register. Please try again.");
+      console.error("Registration error:", error);
+      toast.error("An unexpected error occurred. Please try again later.");
     }
   }
 

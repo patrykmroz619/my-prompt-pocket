@@ -34,11 +34,27 @@ export function ForgotPasswordForm({ onSubmit }: ForgotPasswordFormProps) {
 
   async function handleSubmit(data: ForgotPasswordFormValues) {
     try {
-      // Simulate password reset request
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
+      // If an external onSubmit handler is provided, use it
       if (onSubmit) {
         await onSubmit(data.email);
+        setSubmittedEmail(data.email);
+        setIsSubmitted(true);
+        return;
+      }
+
+      // Otherwise, call the API endpoint directly
+      const response = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: data.email }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to request password reset");
       }
 
       setSubmittedEmail(data.email);
