@@ -50,3 +50,7 @@ The application employs a comprehensive testing strategy across multiple layers 
 - **React Testing Library** - Library for testing React components by simulating user behavior.
 - **Playwright** - End-to-end testing frameworks for simulating real user scenarios in actual browsers.
 - **Mock Service Worker (MSW)** - Tool for intercepting and mocking HTTP requests during testing.
+
+## 6. Development Tools
+
+- **Bun** - Fast JavaScript runtime for executing scripts and managing packages, providing a modern alternative to Node.js.
