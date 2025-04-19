@@ -16,11 +16,7 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-export interface LoginFormProps {
-  onSubmit?: (email: string, password: string) => Promise<void>;
-}
-
-export function LoginForm({ onSubmit }: LoginFormProps) {
+export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<LoginFormValues>({
@@ -34,11 +30,6 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
   async function handleSubmit(data: LoginFormValues) {
     try {
       setIsLoading(true);
-
-      if (onSubmit) {
-        await onSubmit(data.email, data.password);
-        return;
-      }
 
       const response = await fetch("/api/auth/login", {
         method: "POST",
