@@ -1,7 +1,7 @@
 import type { Json } from "@shared/db/database.types";
 import { supabaseClient } from "@shared/db/supabase.client";
 import type { PromptParameter, PromptDto } from "@shared/types/types";
-import { PromptCreationError } from "../exceptions/prompt.exceptions";
+import { PromptCreationError } from "../server/exceptions/prompt.exceptions";
 
 export const promptRepository = {
   createPrompt: async (data: {

@@ -1,8 +1,8 @@
 import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { extractParametersFromContent } from "@modules/prompts/utils/extractParametersFromContent.util";
-import { createPromptSchema } from "@modules/prompts/schemas/create-prompt.schema";
+import { extractParametersFromContent } from "@modules/prompts/shared/utils/extractParametersFromContent.util";
+import { createPromptSchema } from "@modules/prompts/shared/schemas/create-prompt.schema";
 import type { z } from "zod";
 import type { PromptDto, CreatePromptCommand, UpdatePromptCommand } from "@shared/types/types";
 

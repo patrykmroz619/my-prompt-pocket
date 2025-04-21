@@ -20,16 +20,9 @@ When introducing changes to the project, always follow the directory structure b
 - "./src/shared/components" - reusable components
 - "./src/shared/components/ui" - reusable UI components
 - "./src/shared/components/layout" - reusable layout components
-- "./src/shared/hooks" - reusable hooks
-- "./src/shared/utils" - reusable utility functions
-- "./src/shared/types" - reusable types
+- "./src/shared/(hooks|types|utils|styles)" - shared code between modules
 - "./src/modules" - module-specific code
-- "./src/modules/prompts" - code related to prompts
-- "./src/modules/{{module_name}}" - code related to a specific module
-- "./src/modules/{{module_name}}/components" - module-specific components
-- "./src/modules/{{module_name}}/types" - module-specific types
-- "./src/modules/{{module_name}}/hooks" - module-specific hooks
-- "./src/modules/{{module_name}}/utils" - module-specific utility functions
-- "./src/modules/{{module_name}}/services" - module-specific services
-- "./src/modules/{{module_name}}/repositories" - module-specific repositories
-- "./src/modules/{{module_name}}/styles" - module-specific styles
+- "./src/modules/prompts" - code related to prompts module
+- "./src/modules/{{module_name}}/client/(components|hooks|services|utils)" - client code related to a specific module
+- "./src/modules/{{module_name}}/server/(repositories|services|exceptions|utils)" - server code related to a specific module
+- "./src/modules/{{module_name}}/shared/(utils|schemas|types)" - shared client and server code related to a specific module

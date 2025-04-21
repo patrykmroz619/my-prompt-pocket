@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { extractParametersFromContent } from "../utils/extractParametersFromContent.util";
-import { createPromptSchema } from "../schemas/create-prompt.schema";
+import { extractParametersFromContent } from "../../shared/utils/extractParametersFromContent.util";
+import { createPromptSchema } from "../../shared/schemas/create-prompt.schema";
 import {
   MissingParameterDefinitionsError,
   PromptNameConflictError,

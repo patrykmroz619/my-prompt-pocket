@@ -1,3 +1,11 @@
+### Frontend Coding Standards
+
+#### GENERAL_CODING_STANDARDS
+
+- Use ES6+ syntax for modern JavaScript features
+- Implement TypeScript for type safety and better tooling
+- Move business logic to a separate services layer and hooks
+
 ### Guidelines for REACT
 
 #### REACT_CODING_STANDARDS
