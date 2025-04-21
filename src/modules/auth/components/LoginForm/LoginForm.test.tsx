@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { LoginForm, type LoginFormProps } from "./LoginForm";
+import { LoginForm } from "./LoginForm";
 import { toast } from "sonner";
 
 // Mock sonner toast with vi.mock() factory pattern at the top level
@@ -18,8 +18,8 @@ const validUser = {
 
 describe("LoginForm", () => {
   // Setup reusable test helpers following the structure for maintainability rule
-  const renderLoginForm = (props: Partial<LoginFormProps> = {}) => {
-    return render(<LoginForm {...props} />);
+  const renderLoginForm = () => {
+    return render(<LoginForm />);
   };
 
   const fillAndSubmitForm = async (email = validUser.email, password = validUser.password) => {
@@ -178,41 +178,6 @@ describe("LoginForm", () => {
         expect(vi.mocked(toast.error)).toHaveBeenCalledWith(networkError.message);
       });
       expect(mockLocation.href).toBe("");
-    });
-  });
-
-  describe("Custom onSubmit Handling", () => {
-    it("should call onSubmit prop with correct data when provided", async () => {
-      // Arrange
-      const mockOnSubmit = vi.fn().mockResolvedValue(undefined);
-      renderLoginForm({ onSubmit: mockOnSubmit });
-
-      // Act
-      await fillAndSubmitForm("prop@example.com", "propPass123");
-
-      // Assert
-      await waitFor(() => {
-        expect(mockOnSubmit).toHaveBeenCalledWith("prop@example.com", "propPass123");
-      });
-      expect(mockFetch).not.toHaveBeenCalled();
-      expect(mockLocation.href).toBe("");
-    });
-
-    it("should show error toast if onSubmit prop throws an error", async () => {
-      // Arrange
-      const errorMessage = "Custom submit failed";
-      const mockOnSubmit = vi.fn().mockRejectedValue(new Error(errorMessage));
-      renderLoginForm({ onSubmit: mockOnSubmit });
-
-      // Act
-      await fillAndSubmitForm("prop@example.com", "propPass123");
-
-      // Assert
-      await waitFor(() => {
-        expect(mockOnSubmit).toHaveBeenCalled();
-        expect(vi.mocked(toast.error)).toHaveBeenCalledWith(errorMessage);
-      });
-      expect(mockFetch).not.toHaveBeenCalled();
     });
   });
 
