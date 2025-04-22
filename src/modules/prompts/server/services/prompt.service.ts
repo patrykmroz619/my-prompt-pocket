@@ -7,6 +7,7 @@ import {
   UndefinedParametersError,
 } from "../exceptions/prompt.exceptions";
 import { promptRepository } from "../repositories/prompt.repository";
+import type { IRequestContext } from "@shared/types/types";
 
 export const promptService = {
   validatePromptParameters: async (content: string, parameters?: { name: string; type: string }[]) => {
@@ -27,29 +28,36 @@ export const promptService = {
     }
   },
 
-  createPrompt: async (data: z.infer<typeof createPromptSchema>, userId: string) => {
+  createPrompt: async (
+    context: IRequestContext,
+    data: z.infer<typeof createPromptSchema>,
+    userId: string
+  ) => {
     try {
       // TODO: Validate that all tags exist and belong to the user
 
-      const prompt = await promptRepository.createPrompt({
-        name: data.name,
-        description: data.description ?? null,
-        content: data.content,
-        parameters: data.parameters ?? [],
-        userId,
-      });
+      const prompt = await promptRepository.createPrompt(
+        context,
+        {
+          name: data.name,
+          description: data.description ?? null,
+          content: data.content,
+          parameters: data.parameters ?? [],
+          userId,
+        }
+      );
 
       if (data.tags && data.tags.length > 0) {
         try {
-          await promptRepository.associateWithTags(prompt.id, data.tags);
+          await promptRepository.associateWithTags(context, prompt.id, data.tags);
         } catch (error) {
           // Rollback prompt creation if tag association fails
-          await promptRepository.deletePrompt(prompt.id);
+          await promptRepository.deletePrompt(context, prompt.id);
           throw error;
         }
       }
 
-      return await promptRepository.getPromptWithTags(prompt.id);
+      return await promptRepository.getPromptWithTags(context, prompt.id);
     } catch (error) {
       if (error instanceof Error && error.message === "Prompt with this name already exists") {
         throw new PromptNameConflictError();

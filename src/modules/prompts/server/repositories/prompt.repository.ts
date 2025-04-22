@@ -1,17 +1,21 @@
 import type { Json } from "@shared/db/database.types";
-import { supabaseClient } from "@shared/db/supabase.client";
-import type { PromptParameter, PromptDto } from "@shared/types/types";
-import { PromptCreationError } from "../server/exceptions/prompt.exceptions";
+import { createSupabaseServerInstance } from "@shared/db/supabase.client";
+import type { PromptParameter, PromptDto, IRequestContext } from "@shared/types/types";
+import { PromptCreationError } from "../exceptions/prompt.exceptions";
 
 export const promptRepository = {
-  createPrompt: async (data: {
-    name: string;
-    description: string | null;
-    content: string;
-    parameters: PromptParameter[];
-    userId: string;
-  }) => {
-    const { data: prompt, error } = await supabaseClient
+  createPrompt: async (
+    context: IRequestContext,
+    data: {
+      name: string;
+      description: string | null;
+      content: string;
+      parameters: PromptParameter[];
+      userId: string;
+    }
+  ) => {
+    const supabase = createSupabaseServerInstance(context);
+    const { data: prompt, error } = await supabase
       .from("prompts")
       .insert({
         name: data.name,
@@ -37,13 +41,14 @@ export const promptRepository = {
     return prompt;
   },
 
-  associateWithTags: async (promptId: string, tagIds: string[]) => {
+  associateWithTags: async (context: IRequestContext, promptId: string, tagIds: string[]) => {
+    const supabase = createSupabaseServerInstance(context);
     const promptTags = tagIds.map(tagId => ({
       prompt_id: promptId,
       tag_id: tagId,
     }));
 
-    const { error: tagError } = await supabaseClient
+    const { error: tagError } = await supabase
       .from("prompt_tags")
       .insert(promptTags);
 
@@ -52,8 +57,9 @@ export const promptRepository = {
     }
   },
 
-  deletePrompt: async (promptId: string) => {
-    const { error } = await supabaseClient
+  deletePrompt: async (context: IRequestContext, promptId: string) => {
+    const supabase = createSupabaseServerInstance(context);
+    const { error } = await supabase
       .from("prompts")
       .delete()
       .eq("id", promptId);
@@ -63,8 +69,9 @@ export const promptRepository = {
     }
   },
 
-  getPromptWithTags: async (promptId: string) => {
-    const { data: promptWithTags, error: fetchError } = await supabaseClient
+  getPromptWithTags: async (context: IRequestContext, promptId: string) => {
+    const supabase = createSupabaseServerInstance(context);
+    const { data: promptWithTags, error: fetchError } = await supabase
       .from("prompts")
       .select(`
         *,

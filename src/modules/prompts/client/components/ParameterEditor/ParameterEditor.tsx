@@ -39,7 +39,7 @@ export function ParameterEditor({ parameters, onChange }: ParameterEditorProps) 
       <div className="space-y-3">
         {parameters.map((param) => (
           <div key={param.name} className="flex items-center justify-between gap-4 rounded-lg border p-3">
-            <div className="font-mono text-sm">{`{{${param.name}}}`}</div>
+            <div className="font-mono text-sm">{param.name}</div>
             <Select
               value={param.type}
               onValueChange={(value: "short-text" | "long-text") => handleTypeChange(param.name, value)}

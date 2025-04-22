@@ -1,28 +1,33 @@
+import { z } from "zod";
+import type { APIRoute } from "astro";
 import { MissingParameterDefinitionsError, PromptNameConflictError, UndefinedParametersError } from "@modules/prompts/server/exceptions/prompt.exceptions";
 import { createPromptSchema } from "@modules/prompts/shared/schemas/create-prompt.schema";
 import { promptService } from "@modules/prompts/server/services/prompt.service";
-import type { APIRoute } from "astro";
-import { z } from "zod";
+import type { IRequestContext } from "@shared/types/types";
 
 
-export const POST: APIRoute = async ({ request, locals }) => {
+export const POST: APIRoute = async ({ request, locals, cookies }) => {
   try {
-    const session = await locals.supabase.auth.getSession();
-    if (!session.data.session?.user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401
-      });
-    }
 
     // Parse and validate request body
     const rawBody = await request.json();
     const body = createPromptSchema.parse(rawBody);
 
+    // Create context object with headers and cookies
+    const context: IRequestContext = {
+      headers: request.headers,
+      cookies
+    };
+
     // Validate parameters
     await promptService.validatePromptParameters(body.content, body.parameters);
 
     // Create prompt
-    const prompt = await promptService.createPrompt(body, session.data.session.user.id);
+    const prompt = await promptService.createPrompt(
+      context,
+      body,
+      locals.user.id
+    );
 
     return new Response(JSON.stringify(prompt), {
       status: 201

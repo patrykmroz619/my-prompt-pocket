@@ -1,6 +1,13 @@
+import type { AstroCookies } from "astro";
+
 export interface IUser {
   id: string;
   email: string | undefined;
+}
+
+export interface IRequestContext {
+  headers: Headers;
+  cookies: AstroCookies;
 }
 
 /**

@@ -1,8 +1,10 @@
-import { useNavigate } from "@shared/hooks";
-import type { PromptDto, UpdatePromptCommand } from "@shared/types/types";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+
+import { useNavigate } from "@shared/hooks";
+import type { PromptDto, UpdatePromptCommand } from "@shared/types/types";
 import { PromptForm } from "../PromptForm";
+import { promptService } from "../../services/prompts.service";
 
 interface EditPromptPageProps {
   promptId: string;
@@ -16,23 +18,20 @@ export const EditPromptPage = ({ promptId }: EditPromptPageProps) => {
   useEffect(() => {
     const fetchPrompt = async () => {
       try {
-        const response = await fetch(`/api/prompts/${promptId}`);
-
-        if (!response.ok) {
-          if (response.status === 404) {
-            toast.error("Prompt not found");
-            navigate("/prompts");
-            return;
-          }
-          throw new Error("Failed to fetch prompt");
-        }
-
-        const data = await response.json();
+        const data = await promptService.getPromptById(promptId);
         setPrompt(data);
       } catch (error) {
         console.error("Error fetching prompt:", error);
-        toast.error("Failed to load prompt");
+
+        if (error instanceof Error && error.message === "Prompt not found") {
+          toast.error("Prompt not found");
+        } else {
+          toast.error("Failed to load prompt");
+        }
+
         navigate("/prompts");
+
+        throw error;
       } finally {
         setIsLoading(false);
       }
@@ -43,51 +42,17 @@ export const EditPromptPage = ({ promptId }: EditPromptPageProps) => {
 
   const handleSubmit = async (data: UpdatePromptCommand) => {
     try {
-      const response = await fetch(`/api/prompts/${promptId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-
-        if (response.status === 409) {
-          toast.error("A prompt with this name already exists");
-          return;
-        }
-
-        if (response.status === 400) {
-          if (errorData.parameters) {
-            toast.error(`Missing parameter definitions for: ${errorData.parameters.join(", ")}`);
-            return;
-          }
-          if (errorData.missingParameters) {
-            toast.error(`Some parameters are missing type definitions: ${errorData.missingParameters.join(", ")}`);
-            return;
-          }
-          toast.error("Please check the form for errors");
-          return;
-        }
-
-        if (response.status === 404) {
-          toast.error("Prompt not found");
-          navigate("/prompts");
-          return;
-        }
-
-        toast.error("Failed to update prompt");
-        return;
-      }
-
-      await response.json(); // Ensure valid response
+      await promptService.updatePrompt(promptId, data);
       toast.success("Prompt updated successfully");
       navigate("/prompts");
     } catch (error) {
       console.error("Error updating prompt:", error);
-      toast.error("An unexpected error occurred");
+
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     }
   };
 
