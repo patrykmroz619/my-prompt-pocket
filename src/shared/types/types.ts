@@ -28,7 +28,6 @@ export interface TagDto {
   name: string;
   prompt_count?: number; // Optional as it's only included in GET /api/tags
   created_at: string;
-  updated_at: string;
 }
 
 export interface CreateTagCommand {
