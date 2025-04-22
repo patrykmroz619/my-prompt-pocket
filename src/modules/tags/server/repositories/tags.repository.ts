@@ -51,7 +51,40 @@ async function insertTag(command: CreateTagCommand, userId: string, context: IRe
   };
 }
 
+// Find all tags for a user with the count of associated prompts
+async function findTagsByUserIdWithPromptCount(userId: string, context: IRequestContext): Promise<TagDto[]> {
+  const supabase = createSupabaseServerInstance(context);
+
+  const { data, error } = await supabase
+    .from('tags')
+    .select(`
+      id,
+      name,
+      created_at,
+      prompt_tags ( count )
+    `)
+    .eq('user_id', userId)
+    .order('name', { ascending: true });
+
+  if (error) {
+    console.error("Error fetching tags with prompt count:", error);
+    throw new Error(`Error fetching tags: ${error.message}`);
+  }
+
+  // Map the data to TagDto[], ensuring prompt_tags is an array and getting the count
+  const tags: TagDto[] = data?.map(tag => ({
+    id: tag.id,
+    name: tag.name,
+    created_at: tag.created_at,
+    // Supabase returns the count within an array object when using foreign table joins like this
+    prompt_count: Array.isArray(tag.prompt_tags) ? tag.prompt_tags[0]?.count ?? 0 : 0,
+  })) ?? [];
+
+  return tags;
+}
+
 export const tagRepository = {
   checkTagExists,
-  insertTag
+  insertTag,
+  findTagsByUserIdWithPromptCount // Add the new method here
 };
