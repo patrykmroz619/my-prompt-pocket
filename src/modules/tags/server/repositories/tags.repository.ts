@@ -83,8 +83,114 @@ async function findTagsByUserIdWithPromptCount(userId: string, context: IRequest
   return tags;
 }
 
+// Find a tag by ID and check if it belongs to the user
+async function findTagByIdAndUserId(tagId: string, userId: string, context: IRequestContext): Promise<TagDto | null> {
+  const supabase = createSupabaseServerInstance(context);
+
+  const { data, error } = await supabase
+    .from("tags")
+    .select(`
+      id,
+      name,
+      created_at,
+      prompt_tags ( count )
+    `)
+    .eq("id", tagId)
+    .eq("user_id", userId)
+    .single();
+
+  if (error) {
+    if (error.code === "PGRST116") {
+      // Record not found error code
+      return null;
+    }
+    throw new Error(`Error finding tag: ${error.message}`);
+  }
+
+  if (!data) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    name: data.name,
+    created_at: data.created_at,
+    prompt_count: Array.isArray(data.prompt_tags) ? data.prompt_tags[0]?.count ?? 0 : 0,
+  };
+}
+
+// Check if a tag name exists for a user (excluding a specific tag ID)
+async function checkTagNameExistsExcludingId(
+  name: string,
+  userId: string,
+  excludeTagId: string,
+  context: IRequestContext
+): Promise<boolean> {
+  const supabase = createSupabaseServerInstance(context);
+
+  const { data, error } = await supabase
+    .from("tags")
+    .select("id")
+    .eq("user_id", userId)
+    .ilike("name", name)
+    .neq("id", excludeTagId)
+    .limit(1);
+
+  if (error) {
+    throw new Error(`Error checking tag name existence: ${error.message}`);
+  }
+
+  return data && data.length > 0;
+}
+
+// Update a tag name
+async function updateTag(
+  tagId: string,
+  command: { name: string },
+  userId: string,
+  context: IRequestContext
+): Promise<TagDto> {
+  const supabase = createSupabaseServerInstance(context);
+
+  const now = new Date().toISOString();
+
+  const { data, error } = await supabase
+    .from("tags")
+    .update({
+      name: command.name,
+      updated_at: now,
+    })
+    .eq("id", tagId)
+    .eq("user_id", userId)
+    .select(`
+      id,
+      name,
+      created_at,
+      prompt_tags ( count )
+    `)
+    .single();
+
+  if (error) {
+    throw new Error(`Error updating tag: ${error.message}`);
+  }
+
+  if (!data) {
+    throw new Error("Failed to retrieve the updated tag");
+  }
+
+  return {
+    id: data.id,
+    name: data.name,
+    created_at: data.created_at,
+    prompt_count: Array.isArray(data.prompt_tags) ? data.prompt_tags[0]?.count ?? 0 : 0,
+  };
+}
+
 export const tagRepository = {
   checkTagExists,
   insertTag,
-  findTagsByUserIdWithPromptCount // Add the new method here
+  findTagsByUserIdWithPromptCount,
+  findTagByIdAndUserId,
+  checkTagNameExistsExcludingId,
+  updateTag
 };

@@ -1,7 +1,9 @@
 import type { CreateTagCommand, IRequestContext, TagDto } from "../../../../shared/types/types";
-import { TagAlreadyExistsError } from "../exceptions/tags.exceptions";
+import { TagAlreadyExistsError, TagNotFoundError } from "../exceptions/tags.exceptions";
 import { tagRepository } from "../repositories/tags.repository";
 import { createTagSchema } from "@modules/tags/shared/schemas/create-tag-schema";
+import { updateTagSchema } from "@modules/tags/shared/schemas/update-tag-schema";
+import type { UpdateTagCommand } from "../../../../shared/types/types";
 
 // Validate tag creation command
 function validateCreateTagCommand(data: unknown): CreateTagCommand {
@@ -43,8 +45,53 @@ async function getTagsForUser(userId: string, context: IRequestContext): Promise
   }
 }
 
+// Validate tag update command
+function validateUpdateTagCommand(data: unknown): UpdateTagCommand {
+  const result = updateTagSchema.safeParse(data);
+
+  if (!result.success) {
+    throw new Error(`Invalid tag data: ${result.error.message}`);
+  }
+
+  return result.data;
+}
+
+// Update an existing tag
+async function updateTag(
+  tagId: string,
+  command: UpdateTagCommand,
+  userId: string,
+  context: IRequestContext
+): Promise<TagDto> {
+  // Check if tag exists and belongs to user
+  const existingTag = await tagRepository.findTagByIdAndUserId(tagId, userId, context);
+
+  if (!existingTag) {
+    throw new TagNotFoundError(`Tag with ID ${tagId} not found or does not belong to user`);
+  }
+
+  // Check if the new name conflicts with existing ones (excluding current tag)
+  const tagNameExists = await tagRepository.checkTagNameExistsExcludingId(
+    command.name,
+    userId,
+    tagId,
+    context
+  );
+
+  if (tagNameExists) {
+    throw new TagAlreadyExistsError(`Tag name '${command.name}' already exists`);
+  }
+
+  // Update the tag
+  const updatedTag = await tagRepository.updateTag(tagId, command, userId, context);
+
+  return updatedTag;
+}
+
 export const tagService = {
   validateCreateTagCommand,
   createTag,
-  getTagsForUser // Add the new method here
+  getTagsForUser,
+  validateUpdateTagCommand,
+  updateTag
 };
