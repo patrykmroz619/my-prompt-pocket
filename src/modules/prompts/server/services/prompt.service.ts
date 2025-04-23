@@ -122,6 +122,7 @@ export const promptService = {
         description: promptWithTags.description,
         content: promptWithTags.content,
         parameters: Array.isArray(promptWithTags.parameters) ? promptWithTags.parameters : [],
+        user_id: promptWithTags.user_id,
         created_at: promptWithTags.created_at,
         updated_at: promptWithTags.updated_at,
         tags: promptWithTags.prompt_tags.map((pt) => pt.tag),
@@ -159,6 +160,7 @@ export const promptService = {
       content: prompt.content,
       // Ensure parameters is an array, handle null/undefined from DB if necessary
       parameters: Array.isArray(prompt.parameters) ? prompt.parameters : [],
+      user_id: prompt.user_id,
       created_at: prompt.created_at,
       updated_at: prompt.updated_at,
       // Extract and flatten tags
@@ -201,6 +203,7 @@ export const promptService = {
       parameters: Array.isArray(p.parameters) ? p.parameters : [],
       created_at: p.created_at,
       updated_at: p.updated_at,
+      user_id: p.user_id,
       // Extract and flatten tags
       tags: p.prompt_tags.map((pt) => pt.tag),
     }));
@@ -221,5 +224,27 @@ export const promptService = {
         page_size: page_size,
       },
     };
+  },
+
+  deletePrompt: async (
+    context: IRequestContext,
+    promptId: string,
+    userId: string
+  ): Promise<void> => {
+    // Check if the prompt exists and belongs to the user
+    const prompt = await promptRepository.findById(context, promptId);
+
+    // If prompt is not found, throw a NotFoundException
+    if (!prompt) {
+      throw new NotFoundException(promptId);
+    }
+
+    // Check if the prompt belongs to the user
+    if (prompt.user_id !== userId) {
+      throw new NotFoundException(promptId);
+    }
+
+    // Delete the prompt
+    await promptRepository.deletePrompt(context, promptId);
   },
 };
