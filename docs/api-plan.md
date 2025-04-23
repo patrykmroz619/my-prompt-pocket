@@ -435,9 +435,18 @@ Associates a tag with a prompt.
 - 404 Not Found: Prompt or tag not found
 - 409 Conflict: Association already exists
 
-#### DELETE /api/prompt-tags/:prompt_id/:tag_id
+#### DELETE /api/prompt-tags
 
 Removes a tag from a prompt.
+
+**Request:**
+
+```json
+{
+  "prompt_id": "uuid",
+  "tag_id": "uuid"
+}
+```
 
 **Response:** 204 No Content
 
