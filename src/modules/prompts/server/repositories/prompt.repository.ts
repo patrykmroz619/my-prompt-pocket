@@ -107,6 +107,36 @@ export const promptRepository = {
     return promptWithTags;
   },
 
+  findById: async (context: IRequestContext, promptId: string): Promise<PromptWithTagsDb | null> => {
+    const supabase = createSupabaseServerInstance(context);
+
+    // Query the database for a prompt with the given ID
+    // Join with prompt_tags and tags to retrieve associated tag information
+    const { data, error } = await supabase
+      .from("prompts")
+      .select(`
+        *,
+        prompt_tags(
+          tag:tags(*)
+        )
+      `)
+      .eq("id", promptId)
+      .single();
+
+    if (error) {
+      // If the error is "not found", return null instead of throwing
+      if (error.code === "PGRST116") {
+        return null;
+      }
+
+      console.error("Error fetching prompt by ID:", error);
+      throw new Error(`Failed to fetch prompt: ${error.message}`);
+    }
+
+    // Return the prompt with tags
+    return data as unknown as PromptWithTagsDb;
+  },
+
   findMany: async (
     context: IRequestContext,
     userId: string,

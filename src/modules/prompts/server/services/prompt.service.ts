@@ -3,6 +3,7 @@ import { extractParametersFromContent } from "../../shared/utils/extractParamete
 import { createPromptSchema } from "../../shared/schemas/create-prompt.schema";
 import {
   MissingParameterDefinitionsError,
+  NotFoundException,
   PromptNameConflictError,
   UndefinedParametersError,
 } from "../exceptions/prompt.exceptions";
@@ -69,6 +70,33 @@ export const promptService = {
       }
       throw error;
     }
+  },
+
+  getPromptById: async (
+    context: IRequestContext,
+    promptId: string
+  ): Promise<PromptDto> => {
+    // Fetch the prompt from the repository
+    const prompt = await promptRepository.findById(context, promptId);
+
+    // If prompt is not found, throw a NotFoundException
+    if (!prompt) {
+      throw new NotFoundException(promptId);
+    }
+
+    // Map the database prompt to the PromptDto format
+    return {
+      id: prompt.id,
+      name: prompt.name,
+      description: prompt.description,
+      content: prompt.content,
+      // Ensure parameters is an array, handle null/undefined from DB if necessary
+      parameters: Array.isArray(prompt.parameters) ? prompt.parameters : [],
+      created_at: prompt.created_at,
+      updated_at: prompt.updated_at,
+      // Extract and flatten tags
+      tags: prompt.prompt_tags.map((pt) => pt.tag),
+    };
   },
 
   getPrompts: async (

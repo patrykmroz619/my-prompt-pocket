@@ -12,6 +12,13 @@ export class PromptNameConflictError extends Error {
   }
 }
 
+export class NotFoundException extends Error {
+  constructor(resourceId: string) {
+    super(`Resource with ID ${resourceId} not found`);
+    this.name = "NotFoundException";
+  }
+}
+
 export class MissingParameterDefinitionsError extends Error {
   constructor(parameters: string[]) {
     super("Parameters found in content but no parameter definitions provided");
