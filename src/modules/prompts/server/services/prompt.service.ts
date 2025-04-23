@@ -7,7 +7,12 @@ import {
   UndefinedParametersError,
 } from "../exceptions/prompt.exceptions";
 import { promptRepository } from "../repositories/prompt.repository";
-import type { IRequestContext } from "@shared/types/types";
+import type {
+  IRequestContext,
+  PaginatedResponse,
+  PromptDto,
+} from "@shared/types/types";
+import type { ValidatedPromptFilterParams } from "@modules/prompts/shared/schemas/prompt.schemas";
 
 export const promptService = {
   validatePromptParameters: async (content: string, parameters?: { name: string; type: string }[]) => {
@@ -64,5 +69,62 @@ export const promptService = {
       }
       throw error;
     }
+  },
+
+  getPrompts: async (
+    context: IRequestContext,
+    userId: string,
+    filters: ValidatedPromptFilterParams,
+  ): Promise<PaginatedResponse<PromptDto>> => {
+    // Fetch potentially matching prompts and total count (before strict tag filtering)
+    const { prompts: dbPrompts, totalCount: initialTotalCount } = await promptRepository.findMany(
+      context,
+      userId,
+      filters,
+    );
+
+    // Filter for 'all tags' in the service layer if tags are specified
+    let filteredDbPrompts = dbPrompts;
+    if (filters.tags && filters.tags.length > 0) {
+      const requiredTagIds = new Set(filters.tags);
+      filteredDbPrompts = dbPrompts.filter((p) => {
+        const promptTagIds = new Set(p.prompt_tags.map((pt) => pt.tag.id));
+        // Check if the prompt's tags contain all required tags
+        return [...requiredTagIds].every((requiredTagId) =>
+          promptTagIds.has(requiredTagId),
+        );
+      });
+    }
+
+    // Map filtered database results to PromptDto
+    const mappedPrompts: PromptDto[] = filteredDbPrompts.map((p) => ({
+      id: p.id,
+      name: p.name,
+      description: p.description,
+      content: p.content,
+      // Ensure parameters is an array, handle null/undefined from DB if necessary
+      parameters: Array.isArray(p.parameters) ? p.parameters : [],
+      created_at: p.created_at,
+      updated_at: p.updated_at,
+      // Extract and flatten tags
+      tags: p.prompt_tags.map((pt) => pt.tag),
+    }));
+
+    // Calculate pagination based on the initial total count
+    // Note: total_items and total_pages reflect the count *before* service-layer tag filtering.
+    // This is a limitation of filtering after fetching paginated results.
+    // A more accurate count would require filtering at the DB level (e.g., with a function/view).
+    const { page, page_size } = filters;
+    const total_pages = Math.ceil(initialTotalCount / page_size);
+
+    return {
+      data: mappedPrompts,
+      pagination: {
+        total_items: initialTotalCount, // Reflects count before service-layer filtering
+        total_pages: total_pages,
+        current_page: page,
+        page_size: page_size,
+      },
+    };
   },
 };

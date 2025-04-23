@@ -1,7 +1,21 @@
 import type { Json } from "@shared/db/database.types";
 import { createSupabaseServerInstance } from "@shared/db/supabase.client";
-import type { PromptParameter, PromptDto, IRequestContext } from "@shared/types/types";
+import type {
+  PromptParameter,
+  PromptDto,
+  IRequestContext,
+  TagDto,
+} from "@shared/types/types";
 import { PromptCreationError } from "../exceptions/prompt.exceptions";
+import type { ValidatedPromptFilterParams } from "@modules/prompts/shared/schemas/prompt.schemas";
+
+// Define a type for the structure returned by the query
+interface PromptWithTagsDb extends Omit<PromptDto, 'tags' | 'parameters'> {
+  parameters: PromptParameter;
+  prompt_tags: {
+    tag: TagDto;
+  }[];
+}
 
 export const promptRepository = {
   createPrompt: async (
@@ -91,5 +105,60 @@ export const promptRepository = {
     }
 
     return promptWithTags;
+  },
+
+  findMany: async (
+    context: IRequestContext,
+    userId: string,
+    filters: ValidatedPromptFilterParams,
+  ): Promise<{ prompts: PromptWithTagsDb[]; totalCount: number }> => {
+    const supabase = createSupabaseServerInstance(context);
+    const { page, page_size, search, sort_by, sort_dir } = filters;
+    const offset = (page - 1) * page_size;
+
+    // Base query to select prompts and their tags
+    let query = supabase
+      .from("prompts")
+      .select<string, any>( // Use 'any' temporarily for complex select
+        `
+        *,
+        prompt_tags!inner(tag:tags!inner(*))
+      `,
+        { count: "exact" }, // Request total count matching filters
+      )
+      .eq("user_id", userId);
+
+    // Apply search filter
+    if (search) {
+      query = query.ilike("name", `%${search}%`);
+    }
+
+    // Tag filtering is removed here - will be handled in the service layer
+
+    // Apply sorting
+    query = query.order(sort_by, { ascending: sort_dir === "asc" });
+
+    // Apply pagination
+    query = query.range(offset, offset + page_size - 1);
+
+    // Execute the query
+    const { data, error, count } = await query;
+
+    if (error) {
+      console.error("Error fetching prompts:", error);
+      // Consider throwing a specific repository error
+      throw new Error(`Failed to fetch prompts: ${error.message}`);
+    }
+
+    // Cast the data to the expected type
+    const prompts = (data || []) as PromptWithTagsDb[];
+
+    // The count returned by Supabase with { count: 'exact' } is the total count matching filters
+    const totalCount = count ?? 0;
+
+    // TODO: Refine tag filtering logic if strict 'all tags' is needed and the current approach is insufficient.
+    // This might involve fetching prompts and then filtering in the service layer or using a DB function.
+
+    return { prompts, totalCount };
   },
 };
