@@ -4,6 +4,8 @@ import { tagRepository } from "../repositories/tags.repository";
 import { createTagSchema } from "@modules/tags/shared/schemas/create-tag-schema";
 import { updateTagSchema } from "@modules/tags/shared/schemas/update-tag-schema";
 import type { UpdateTagCommand } from "../../../../shared/types/types";
+import { tagIdSchema } from "../../shared/schemas/tag-schema";
+import type { IUser } from "@shared/types/types";
 
 // Validate tag creation command
 function validateCreateTagCommand(data: unknown): CreateTagCommand {
@@ -88,10 +90,29 @@ async function updateTag(
   return updatedTag;
 }
 
+// Service to validate and delete a tag
+async function deleteTagService(tagId: string, user: IUser, context: IRequestContext): Promise<void> {
+  // Validate tag ID
+  try {
+    tagIdSchema.parse(tagId);
+  } catch (error) {
+    throw new Error("Invalid tag ID format");
+  }
+
+  // Attempt to delete the tag
+  const deleted = await tagRepository.deleteTag(tagId, user.id, context);
+
+  // If tag wasn't deleted (not found or not owned by user)
+  if (!deleted) {
+    throw new TagNotFoundError("Tag not found");
+  }
+}
+
 export const tagService = {
   validateCreateTagCommand,
   createTag,
   getTagsForUser,
   validateUpdateTagCommand,
-  updateTag
+  updateTag,
+  deleteTagService
 };

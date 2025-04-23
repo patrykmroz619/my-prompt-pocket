@@ -2,6 +2,7 @@
 import type { APIRoute } from "astro";
 import { tagService } from "@modules/tags/server/services/tags.service";
 import type { IRequestContext, UpdateTagCommand } from "@shared/types/types";
+import { TagNotFoundError } from "@modules/tags/server/exceptions/tags.exceptions";
 
 export const PATCH: APIRoute = async ({ request, cookies, locals, params }) => {
   try {
@@ -74,5 +75,62 @@ export const PATCH: APIRoute = async ({ request, cookies, locals, params }) => {
       JSON.stringify({ error: "Internal server error" }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
+  }
+};
+
+export const DELETE: APIRoute = async ({ params, request, cookies, locals }) => {
+  try {
+    // Get authenticated user from locals
+    const user = locals.user;
+    if (!user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    // Extract tag ID from URL
+    const tagId = params.id;
+    if (!tagId) {
+      return new Response(JSON.stringify({ error: "Tag ID is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    // Create request context to pass to service
+    const context: IRequestContext = {
+      headers: request.headers,
+      cookies
+    };
+
+    // Delete the tag
+    await tagService.deleteTagService(tagId, user, context);
+    // Return 204 No Content for successful deletion
+    return new Response(null, { status: 204 });
+  } catch (error) {
+    if (error instanceof TagNotFoundError) {
+      return new Response(JSON.stringify({ error: error.message }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    if (error instanceof Error) {
+      if (error.message === "Invalid tag ID format") {
+        return new Response(JSON.stringify({ error: error.message }), {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+      console.error("Error deleting tag:", error);
+      return new Response(JSON.stringify({ error: "Internal server error" }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    return new Response(JSON.stringify({ error: "Unknown error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 };

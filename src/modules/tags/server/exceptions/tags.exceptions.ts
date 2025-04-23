@@ -12,7 +12,7 @@ export class TagAlreadyExistsError extends Error {
  * Exception thrown when a tag is not found or doesn't belong to the user
  */
 export class TagNotFoundError extends Error {
-  constructor(message: string) {
+  constructor(message: string = "Tag not found") {
     super(message);
     this.name = "TagNotFoundError";
   }

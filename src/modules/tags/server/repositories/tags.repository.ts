@@ -186,11 +186,28 @@ async function updateTag(
   };
 }
 
+// Delete a tag by ID and user, returns true if deleted, false if not found/owned
+async function deleteTag(tagId: string, userId: string, context: IRequestContext): Promise<boolean> {
+  const supabase = createSupabaseServerInstance(context);
+  const { error, count } = await supabase
+    .from("tags")
+    .delete({ count: "exact" })
+    .match({ id: tagId, user_id: userId });
+
+  if (error) {
+    console.error("Error deleting tag:", error);
+    throw new Error(`Failed to delete tag: ${error.message}`);
+  }
+
+  return (count ?? 0) === 1;
+}
+
 export const tagRepository = {
   checkTagExists,
   insertTag,
   findTagsByUserIdWithPromptCount,
   findTagByIdAndUserId,
   checkTagNameExistsExcludingId,
-  updateTag
+  updateTag,
+  deleteTag
 };
