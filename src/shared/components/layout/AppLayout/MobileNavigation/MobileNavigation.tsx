@@ -41,7 +41,7 @@ export function MobileNavigation({ userData }: MobileNavigationProps) {
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger>
+        <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" className="md:hidden z-50">
             <MenuIcon className="size-5" />
             <span className="sr-only">Toggle menu</span>

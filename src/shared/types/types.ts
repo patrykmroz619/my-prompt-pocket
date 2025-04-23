@@ -110,8 +110,8 @@ export interface PaginatedResponse<T> {
  * Filter and search types
  */
 export interface PromptFilterParams extends PaginationParams {
-  search?: string;
-  tags?: string; // Comma-separated string of tag IDs
+  search?: string | undefined;
+  tags?: string | undefined; // Comma-separated string of tag IDs
 }
 
 /**

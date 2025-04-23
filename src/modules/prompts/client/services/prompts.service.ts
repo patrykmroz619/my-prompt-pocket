@@ -1,9 +1,34 @@
-import type { CreatePromptCommand, PromptDto, UpdatePromptCommand } from "@shared/types/types";
+import type { CreatePromptCommand, PaginatedResponse, PromptDto, PromptFilterParams, UpdatePromptCommand } from "@shared/types/types";
 
 /**
  * Service for handling prompt-related API requests
  */
 export const promptService = {
+  /**
+   * Fetches a paginated list of prompts with optional filtering
+   */
+  async getPromptsList(params?: PromptFilterParams): Promise<PaginatedResponse<PromptDto>> {
+    // Construct query parameters
+    const queryParams = new URLSearchParams();
+
+    if (params?.search) queryParams.set("search", params.search);
+    if (params?.tags) queryParams.set("tags", params.tags);
+    if (params?.page) queryParams.set("page", params.page.toString());
+    if (params?.page_size) queryParams.set("page_size", params.page_size.toString());
+    if (params?.sort_by) queryParams.set("sort_by", params.sort_by);
+    if (params?.sort_dir) queryParams.set("sort_dir", params.sort_dir);
+
+    const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
+
+    const response = await fetch(`/api/prompts${queryString}`);
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch prompts list");
+    }
+
+    return await response.json();
+  },
+
   /**
    * Fetches a prompt by ID
    */

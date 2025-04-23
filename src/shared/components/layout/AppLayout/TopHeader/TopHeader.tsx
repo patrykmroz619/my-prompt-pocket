@@ -7,5 +7,9 @@ interface TopHeaderProps {
 export function TopHeader(props: TopHeaderProps) {
   const { children } = props;
 
-  return <header className="flex items-center gap-4 p-4 border-b">{children}</header>;
+  return (
+    <header className="border-b">
+      <div className="container mx-auto flex items-center gap-4 p-4">{children}</div>
+    </header>
+  );
 }

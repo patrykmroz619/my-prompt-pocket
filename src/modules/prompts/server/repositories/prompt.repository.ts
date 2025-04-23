@@ -146,24 +146,22 @@ export const promptRepository = {
     const { page, page_size, search, sort_by, sort_dir } = filters;
     const offset = (page - 1) * page_size;
 
-    // Base query to select prompts and their tags
+    // Base query to select prompts and their tags - use LEFT JOIN to include prompts without tags
     let query = supabase
       .from("prompts")
       .select<string, any>( // Use 'any' temporarily for complex select
         `
         *,
-        prompt_tags!inner(tag:tags!inner(*))
+        prompt_tags(tag:tags(*))
       `,
         { count: "exact" }, // Request total count matching filters
       )
       .eq("user_id", userId);
 
-    // Apply search filter
+    // Apply search filter if provided
     if (search) {
       query = query.ilike("name", `%${search}%`);
     }
-
-    // Tag filtering is removed here - will be handled in the service layer
 
     // Apply sorting
     query = query.order(sort_by, { ascending: sort_dir === "asc" });
@@ -176,7 +174,6 @@ export const promptRepository = {
 
     if (error) {
       console.error("Error fetching prompts:", error);
-      // Consider throwing a specific repository error
       throw new Error(`Failed to fetch prompts: ${error.message}`);
     }
 
@@ -185,9 +182,6 @@ export const promptRepository = {
 
     // The count returned by Supabase with { count: 'exact' } is the total count matching filters
     const totalCount = count ?? 0;
-
-    // TODO: Refine tag filtering logic if strict 'all tags' is needed and the current approach is insufficient.
-    // This might involve fetching prompts and then filtering in the service layer or using a DB function.
 
     return { prompts, totalCount };
   },
