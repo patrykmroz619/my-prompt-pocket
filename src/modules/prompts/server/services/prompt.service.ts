@@ -14,6 +14,7 @@ import type {
   PromptDto,
 } from "@shared/types/types";
 import type { ValidatedPromptFilterParams } from "@modules/prompts/shared/schemas/prompt.schemas";
+import type { ValidatedUpdatePromptCommand } from "@modules/prompts/shared/schemas/update-prompt.schema";
 
 export const promptService = {
   validatePromptParameters: async (content: string, parameters?: { name: string; type: string }[]) => {
@@ -67,6 +68,72 @@ export const promptService = {
     } catch (error) {
       if (error instanceof Error && error.message === "Prompt with this name already exists") {
         throw new PromptNameConflictError();
+      }
+      throw error;
+    }
+  },
+
+  updatePrompt: async (
+    context: IRequestContext,
+    promptId: string,
+    userId: string,
+    data: ValidatedUpdatePromptCommand
+  ): Promise<PromptDto> => {
+    try {
+      // Extract parameters from the prompt content
+      const extractedParameters = extractParametersFromContent(data.content);
+
+      // Create parameter definitions for the extracted parameters
+      // If no specific type is provided, default to "short-text"
+      const parameters = extractedParameters.map(name => ({
+        name,
+        type: "short-text" as const,
+      }));
+
+      // Update the prompt in the database
+      await promptRepository.updatePrompt(
+        context,
+        promptId,
+        userId,
+        {
+          name: data.name,
+          description: data.description ?? null,
+          content: data.content,
+          parameters,
+        }
+      );
+
+      // Update tags if provided
+      if (data.tags !== undefined) {
+        await promptRepository.updatePromptTags(context, promptId, data.tags);
+      }
+
+      // Fetch the complete updated prompt with tags
+      const promptWithTags = await promptRepository.findById(context, promptId);
+
+      if (!promptWithTags) {
+        throw new NotFoundException(promptId);
+      }
+
+      // Map the database prompt to the PromptDto format
+      return {
+        id: promptWithTags.id,
+        name: promptWithTags.name,
+        description: promptWithTags.description,
+        content: promptWithTags.content,
+        parameters: Array.isArray(promptWithTags.parameters) ? promptWithTags.parameters : [],
+        created_at: promptWithTags.created_at,
+        updated_at: promptWithTags.updated_at,
+        tags: promptWithTags.prompt_tags.map((pt) => pt.tag),
+      };
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message === "A prompt with this name already exists for your account") {
+          throw new PromptNameConflictError();
+        }
+        if (error.message === "Prompt not found") {
+          throw new NotFoundException(promptId);
+        }
       }
       throw error;
     }

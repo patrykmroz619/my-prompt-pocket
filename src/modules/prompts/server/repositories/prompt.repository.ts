@@ -191,4 +191,97 @@ export const promptRepository = {
 
     return { prompts, totalCount };
   },
+
+  updatePrompt: async (
+    context: IRequestContext,
+    promptId: string,
+    userId: string,
+    data: {
+      name: string;
+      description: string | null;
+      content: string;
+      parameters: PromptParameter[];
+    }
+  ): Promise<PromptDto> => {
+    const supabase = createSupabaseServerInstance(context);
+
+    // Check if prompt exists and belongs to the user
+    const { data: existingPrompt, error: checkError } = await supabase
+      .from("prompts")
+      .select("id")
+      .eq("id", promptId)
+      .eq("user_id", userId)
+      .single();
+
+    if (checkError || !existingPrompt) {
+      if (checkError?.code === "PGRST116") {
+        throw new Error("Prompt not found");
+      }
+      throw new Error(`Failed to check prompt: ${checkError?.message || "Unknown error"}`);
+    }
+
+    // Update the prompt
+    const { data: updatedPrompt, error: updateError } = await supabase
+      .from("prompts")
+      .update({
+        name: data.name,
+        description: data.description,
+        content: data.content,
+        parameters: data.parameters as unknown as Json,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", promptId)
+      .select<"*", PromptDto>()
+      .single();
+
+    if (updateError) {
+      if (updateError.code === "23505") { // Unique constraint violation
+        throw new Error("A prompt with this name already exists for your account");
+      }
+      throw new Error(`Failed to update prompt: ${updateError.message}`);
+    }
+
+    if (!updatedPrompt) {
+      throw new Error("Failed to update prompt");
+    }
+
+    return updatedPrompt;
+  },
+
+  updatePromptTags: async (
+    context: IRequestContext,
+    promptId: string,
+    tagIds: string[]
+  ) => {
+    const supabase = createSupabaseServerInstance(context);
+
+    // Delete all existing prompt-tag associations
+    const { error: deleteError } = await supabase
+      .from("prompt_tags")
+      .delete()
+      .eq("prompt_id", promptId);
+
+    if (deleteError) {
+      throw new Error(`Failed to update prompt tags: ${deleteError.message}`);
+    }
+
+    // Skip creating new associations if no tags are provided
+    if (!tagIds.length) {
+      return;
+    }
+
+    // Create new prompt-tag associations
+    const promptTags = tagIds.map(tagId => ({
+      prompt_id: promptId,
+      tag_id: tagId,
+    }));
+
+    const { error: insertError } = await supabase
+      .from("prompt_tags")
+      .insert(promptTags);
+
+    if (insertError) {
+      throw new Error(`Failed to associate prompt with tags: ${insertError.message}`);
+    }
+  },
 };
