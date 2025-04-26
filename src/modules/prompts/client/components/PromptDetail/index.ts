@@ -1,0 +1,1 @@
+export { PromptDetailModal } from "./PromptDetailModal";

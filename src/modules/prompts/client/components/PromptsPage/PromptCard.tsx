@@ -8,9 +8,10 @@ import type { PromptDto } from "@shared/types/types";
 
 interface PromptCardProps {
   prompt: PromptDto;
+  onClick?: (promptId: string) => void;
 }
 
-export const PromptCard: React.FC<PromptCardProps> = ({ prompt }) => {
+export const PromptCard: React.FC<PromptCardProps> = ({ prompt, onClick }) => {
   // Format the creation date
   const formattedDate = (() => {
     const now = new Date();
@@ -33,7 +34,11 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt }) => {
 
   // Handle navigation to prompt detail
   const handleClick = () => {
-    window.location.href = `/prompts/${prompt.id}`;
+    if (onClick) {
+      onClick(prompt.id);
+    } else {
+      window.location.href = `/prompts/${prompt.id}`;
+    }
   };
 
   // Handle navigation to edit page

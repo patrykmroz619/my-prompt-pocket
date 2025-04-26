@@ -22,7 +22,7 @@ export const GET: APIRoute = async ({ params, request, locals, cookies }) => {
 
     // Validate the prompt ID
     try {
-      promptIdSchema.parse(id);
+      promptIdSchema.parse({ id });
     } catch (validationError) {
       return new Response(
         JSON.stringify({
@@ -39,7 +39,7 @@ export const GET: APIRoute = async ({ params, request, locals, cookies }) => {
     // 3. Create request context and call Prompt Service
     const requestContext: IRequestContext = {
       headers: request.headers,
-      cookies
+      cookies,
     };
 
     const prompt = await promptService.getPromptById(requestContext, id as string);
@@ -55,23 +55,17 @@ export const GET: APIRoute = async ({ params, request, locals, cookies }) => {
 
     // Specific handling for Not Found errors
     if (error instanceof NotFoundException) {
-      return new Response(
-        JSON.stringify({ message: error.message }),
-        {
-          status: 404,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      return new Response(JSON.stringify({ message: error.message }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     // Generic Server Error
-    return new Response(
-      JSON.stringify({ message: "Internal Server Error" }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    return new Response(JSON.stringify({ message: "Internal Server Error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 };
 
@@ -110,7 +104,7 @@ export const PATCH: APIRoute = async ({ params, request, locals, cookies }) => {
     try {
       const requestBody = await request.json();
       updateData = updatePromptSchema.parse(requestBody);
-      await promptService.validatePromptParameters(updateData.content, updateData.parameters)
+      await promptService.validatePromptParameters(updateData.content, updateData.parameters);
     } catch (error) {
       return new Response(
         JSON.stringify({
@@ -127,15 +121,10 @@ export const PATCH: APIRoute = async ({ params, request, locals, cookies }) => {
     // 4. Create request context and call Prompt Service
     const requestContext: IRequestContext = {
       headers: request.headers,
-      cookies
+      cookies,
     };
 
-    const updatedPrompt = await promptService.updatePrompt(
-      requestContext,
-      id as string,
-      user.id,
-      updateData
-    );
+    const updatedPrompt = await promptService.updatePrompt(requestContext, id as string, user.id, updateData);
 
     // 5. Return Success Response
     return new Response(JSON.stringify(updatedPrompt), {
@@ -148,33 +137,24 @@ export const PATCH: APIRoute = async ({ params, request, locals, cookies }) => {
 
     // Handle specific error types
     if (error instanceof NotFoundException) {
-      return new Response(
-        JSON.stringify({ message: "Prompt not found" }),
-        {
-          status: 404,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      return new Response(JSON.stringify({ message: "Prompt not found" }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     if (error instanceof PromptNameConflictError) {
-      return new Response(
-        JSON.stringify({ message: "A prompt with this name already exists for your account" }),
-        {
-          status: 409,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      return new Response(JSON.stringify({ message: "A prompt with this name already exists for your account" }), {
+        status: 409,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     // Generic Server Error
-    return new Response(
-      JSON.stringify({ message: "Internal Server Error" }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    return new Response(JSON.stringify({ message: "Internal Server Error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 };
 
@@ -211,7 +191,7 @@ export const DELETE: APIRoute = async ({ params, request, locals, cookies }) => 
     // 3. Create request context and call Prompt Service
     const requestContext: IRequestContext = {
       headers: request.headers,
-      cookies
+      cookies,
     };
 
     // Attempt to delete the prompt
@@ -227,22 +207,16 @@ export const DELETE: APIRoute = async ({ params, request, locals, cookies }) => 
 
     // Specific handling for Not Found errors
     if (error instanceof NotFoundException) {
-      return new Response(
-        JSON.stringify({ message: "Prompt not found" }),
-        {
-          status: 404,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      return new Response(JSON.stringify({ message: "Prompt not found" }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     // Generic Server Error
-    return new Response(
-      JSON.stringify({ message: "Internal Server Error" }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    return new Response(JSON.stringify({ message: "Internal Server Error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 };

@@ -1,4 +1,10 @@
-import type { CreatePromptCommand, PaginatedResponse, PromptDto, PromptFilterParams, UpdatePromptCommand } from "@shared/types/types";
+import type {
+  CreatePromptCommand,
+  PaginatedResponse,
+  PromptDto,
+  PromptFilterParams,
+  UpdatePromptCommand,
+} from "@shared/types/types";
 
 /**
  * Service for handling prompt-related API requests
@@ -18,7 +24,7 @@ export const promptService = {
     if (params?.sort_by) queryParams.set("sort_by", params.sort_by);
     if (params?.sort_dir) queryParams.set("sort_dir", params.sort_dir);
 
-    const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
+    const queryString = queryParams.toString() ? `?${queryParams.toString()}` : "";
 
     const response = await fetch(`/api/prompts${queryString}`);
 
@@ -117,5 +123,39 @@ export const promptService = {
     }
 
     return await response.json();
-  }
+  },
+
+  /**
+   * Delete a prompt by ID
+   *
+   * @param promptId The ID of the prompt to delete
+   * @returns A promise that resolves when the prompt is deleted
+   * @throws Error if the API call fails
+   */
+  async deletePrompt(promptId: string): Promise<void> {
+    if (!promptId) {
+      throw new Error("Prompt ID is required");
+    }
+
+    const response = await fetch(`/api/prompts/${promptId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      // Try to get error message from response
+      let errorMessage = `Failed to delete prompt (Status: ${response.status})`;
+      try {
+        const errorData = await response.json();
+        if (errorData.message) {
+          errorMessage = errorData.message;
+        }
+      } catch (e) {
+        // If we can't parse the error, just use the default message
+      }
+      throw new Error(errorMessage);
+    }
+  },
 };
