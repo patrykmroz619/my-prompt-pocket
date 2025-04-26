@@ -62,7 +62,7 @@ export const POST: APIRoute = async ({ request, cookies, locals }) => {
   }
 };
 
-export const GET: APIRoute = async ({ locals, cookies }) => {
+export const GET: APIRoute = async ({ locals, cookies, request }) => {
   try {
     // Get user ID from locals (provided by auth middleware)
     const userId = locals.user?.id;
@@ -76,7 +76,7 @@ export const GET: APIRoute = async ({ locals, cookies }) => {
 
     // Create request context to pass to service
     const context: IRequestContext = {
-      headers: new Headers(), // GET request doesn't have request.headers in the same way, create empty
+      headers: request.headers,
       cookies
     };
 

@@ -37,6 +37,7 @@ async function createTag(command: CreateTagCommand, userId: string, context: IRe
 async function getTagsForUser(userId: string, context: IRequestContext): Promise<TagDto[]> {
   try {
     const tags = await tagRepository.findTagsByUserIdWithPromptCount(userId, context);
+
     // No additional transformations needed for now, repository returns TagDto[]
     return tags;
   } catch (error: any) {

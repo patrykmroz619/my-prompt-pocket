@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import { usePromptsData } from "../../hooks/usePromptsData";
 import { useQueryParams } from "../../hooks/useQueryParams";
 import type { PaginatedResponse, PromptDto } from "@shared/types/types";

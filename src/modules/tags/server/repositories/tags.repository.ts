@@ -61,9 +61,8 @@ async function findTagsByUserIdWithPromptCount(userId: string, context: IRequest
       id,
       name,
       created_at,
-      prompt_tags ( count )
+      prompt_tags: prompts ( count )
     `)
-    .eq('user_id', userId)
     .order('name', { ascending: true });
 
   if (error) {

@@ -13,4 +13,8 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
+
+  server: {
+    port: 3000, // Set your desired port here
+  },
 });
