@@ -1,5 +1,6 @@
 import { defineMiddleware } from 'astro:middleware';
 import { createSupabaseServerInstance } from '@shared/db/supabase.client';
+import type { IRequestContext } from '@shared/types/types';
 
 // Public paths - Auth UI pages & API endpoints
 const PUBLIC_PATHS = [
@@ -31,10 +32,12 @@ export const onRequest = defineMiddleware(async ({ locals, cookies, url, request
     return next();
   }
 
-  const supabase = createSupabaseServerInstance({
+  const requestContext: IRequestContext = {
     cookies,
     headers: request.headers,
-  });
+  }
+
+  const supabase = createSupabaseServerInstance(requestContext);
 
   // Get user session
   const {
@@ -52,6 +55,8 @@ export const onRequest = defineMiddleware(async ({ locals, cookies, url, request
       email: user.email,
       id: user.id,
     };
+
+    locals.requestContext = requestContext;
 
     // Make supabase instance available to all routes
     locals.supabase = supabase;

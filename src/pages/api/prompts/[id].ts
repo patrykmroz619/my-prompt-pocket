@@ -91,7 +91,7 @@ export const PATCH: APIRoute = async ({ params, request, locals, cookies }) => {
 
     // Validate the prompt ID
     try {
-      promptIdSchema.parse(id);
+      promptIdSchema.parse({ id });
     } catch (validationError) {
       return new Response(
         JSON.stringify({
@@ -110,6 +110,7 @@ export const PATCH: APIRoute = async ({ params, request, locals, cookies }) => {
     try {
       const requestBody = await request.json();
       updateData = updatePromptSchema.parse(requestBody);
+      await promptService.validatePromptParameters(updateData.content, updateData.parameters)
     } catch (error) {
       return new Response(
         JSON.stringify({

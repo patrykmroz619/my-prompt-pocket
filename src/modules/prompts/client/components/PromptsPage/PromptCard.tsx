@@ -1,7 +1,10 @@
 import React from "react";
-import type { PromptDto } from "@shared/types/types";
+import { Pencil } from "lucide-react";
+
 import { Badge } from "@shared/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@shared/components/ui/card";
+import { Button } from "@shared/components/ui/button";
+import type { PromptDto } from "@shared/types/types";
 
 interface PromptCardProps {
   prompt: PromptDto;
@@ -30,12 +33,18 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt }) => {
 
   // Handle navigation to prompt detail
   const handleClick = () => {
+    window.location.href = `/prompts/${prompt.id}`;
+  };
+
+  // Handle navigation to edit page
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent the card click event
     window.location.href = `/prompts/edit/${prompt.id}`;
   };
 
   return (
     <Card
-      className="h-full flex flex-col hover:shadow-md transition-shadow cursor-pointer"
+      className="h-full flex flex-col hover:shadow-md transition-shadow cursor-pointer relative"
       onClick={handleClick}
       tabIndex={0}
       role="button"
@@ -47,9 +56,20 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt }) => {
         }
       }}
     >
-      <CardHeader className="pb-2">
-        <CardTitle className="text-xl line-clamp-1">{prompt.name}</CardTitle>
-        <p className="text-sm text-muted-foreground">{formattedDate}</p>
+      <CardHeader className="pb-2 flex flex-row justify-between items-start">
+        <div>
+          <CardTitle className="text-xl line-clamp-1">{prompt.name}</CardTitle>
+          <p className="text-sm text-muted-foreground">{formattedDate}</p>
+        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-8 w-8 p-0"
+          onClick={handleEditClick}
+          aria-label={`Edit ${prompt.name}`}
+        >
+          <Pencil className="h-4 w-4" />
+        </Button>
       </CardHeader>
 
       <CardContent className="flex-grow">

@@ -1,14 +1,24 @@
 ---
 import Layout from "@shared/components/layout/AppLayout/AppLayout.astro";
 import { EditPromptPage } from "@modules/prompts/client/components/EditPromptPage";
+import { promptService } from "@modules/prompts/server/services/prompt.service";
 
-const { id } = Astro.params;
+const { id: promptId } = Astro.params;
 
-if (!id) {
+if (!promptId) {
+  return Astro.redirect("/prompts");
+}
+
+// Fetch prompt data on the server side
+let prompt;
+try {
+  prompt = await promptService.getPromptById(Astro.locals.requestContext, promptId);
+} catch (error) {
+  console.error("Error fetching prompt:", error);
   return Astro.redirect("/prompts");
 }
 ---
 
 <Layout>
-  <EditPromptPage promptId={id} client:load />
+  <EditPromptPage prompt={prompt} client:load />
 </Layout>

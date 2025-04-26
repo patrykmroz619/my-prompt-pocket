@@ -80,16 +80,6 @@ export const promptService = {
     data: ValidatedUpdatePromptCommand
   ): Promise<PromptDto> => {
     try {
-      // Extract parameters from the prompt content
-      const extractedParameters = extractParametersFromContent(data.content);
-
-      // Create parameter definitions for the extracted parameters
-      // If no specific type is provided, default to "short-text"
-      const parameters = extractedParameters.map(name => ({
-        name,
-        type: "short-text" as const,
-      }));
-
       // Update the prompt in the database
       await promptRepository.updatePrompt(
         context,
@@ -99,7 +89,7 @@ export const promptService = {
           name: data.name,
           description: data.description ?? null,
           content: data.content,
-          parameters,
+          parameters: data.parameters ?? [],
         }
       );
 

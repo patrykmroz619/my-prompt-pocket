@@ -162,7 +162,7 @@ export function PromptForm({ initialData, onSubmit }: PromptFormProps) {
         />
 
         <Button type="submit" className="w-full">
-          Create Prompt
+          {initialData ? "Update Prompt" : "Create Prompt"}
         </Button>
       </form>
     </Form>
