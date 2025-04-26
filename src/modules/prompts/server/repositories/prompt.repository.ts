@@ -1,16 +1,11 @@
 import type { Json } from "@shared/db/database.types";
 import { createSupabaseServerInstance } from "@shared/db/supabase.client";
-import type {
-  PromptParameter,
-  PromptDto,
-  IRequestContext,
-  TagDto,
-} from "@shared/types/types";
+import type { PromptParameter, PromptDto, IRequestContext, TagDto } from "@shared/types/types";
 import { PromptCreationError } from "../exceptions/prompt.exceptions";
 import type { ValidatedPromptFilterParams } from "@modules/prompts/shared/schemas/prompt.schemas";
 
 // Define a type for the structure returned by the query
-interface PromptWithTagsDb extends Omit<PromptDto, 'tags' | 'parameters'> {
+interface PromptWithTagsDb extends Omit<PromptDto, "tags" | "parameters"> {
   parameters: PromptParameter;
   prompt_tags: {
     tag: TagDto;
@@ -42,7 +37,8 @@ export const promptRepository = {
       .single();
 
     if (error) {
-      if (error.code === "23505") { // Unique constraint violation
+      if (error.code === "23505") {
+        // Unique constraint violation
         throw new Error("Prompt with this name already exists");
       }
       throw new PromptCreationError(error.message);
@@ -57,14 +53,12 @@ export const promptRepository = {
 
   associateWithTags: async (context: IRequestContext, promptId: string, tagIds: string[]) => {
     const supabase = createSupabaseServerInstance(context);
-    const promptTags = tagIds.map(tagId => ({
+    const promptTags = tagIds.map((tagId) => ({
       prompt_id: promptId,
       tag_id: tagId,
     }));
 
-    const { error: tagError } = await supabase
-      .from("prompt_tags")
-      .insert(promptTags);
+    const { error: tagError } = await supabase.from("prompt_tags").insert(promptTags);
 
     if (tagError) {
       throw new PromptCreationError(tagError.message);
@@ -73,10 +67,7 @@ export const promptRepository = {
 
   deletePrompt: async (context: IRequestContext, promptId: string) => {
     const supabase = createSupabaseServerInstance(context);
-    const { error } = await supabase
-      .from("prompts")
-      .delete()
-      .eq("id", promptId);
+    const { error } = await supabase.from("prompts").delete().eq("id", promptId);
 
     if (error) {
       throw new PromptCreationError(error.message);
@@ -87,12 +78,14 @@ export const promptRepository = {
     const supabase = createSupabaseServerInstance(context);
     const { data: promptWithTags, error: fetchError } = await supabase
       .from("prompts")
-      .select(`
+      .select(
+        `
         *,
         tags:prompt_tags (
           tag:tags (*)
         )
-      `)
+      `
+      )
       .eq("id", promptId)
       .single();
 
@@ -114,12 +107,14 @@ export const promptRepository = {
     // Join with prompt_tags and tags to retrieve associated tag information
     const { data, error } = await supabase
       .from("prompts")
-      .select(`
+      .select(
+        `
         *,
         prompt_tags(
           tag:tags(*)
         )
-      `)
+      `
+      )
       .eq("id", promptId)
       .single();
 
@@ -140,10 +135,10 @@ export const promptRepository = {
   findMany: async (
     context: IRequestContext,
     userId: string,
-    filters: ValidatedPromptFilterParams,
+    filters: ValidatedPromptFilterParams
   ): Promise<{ prompts: PromptWithTagsDb[]; totalCount: number }> => {
     const supabase = createSupabaseServerInstance(context);
-    const { page, page_size, search, sort_by, sort_dir } = filters;
+    const { page, page_size, search, sort_by, sort_dir, tags } = filters;
     const offset = (page - 1) * page_size;
 
     // Base query to select prompts and their tags - use LEFT JOIN to include prompts without tags
@@ -152,11 +147,15 @@ export const promptRepository = {
       .select<string, any>( // Use 'any' temporarily for complex select
         `
         *,
-        prompt_tags(tag:tags(*))
+        prompt_tags!inner(tag:tags(*))
       `,
-        { count: "exact" }, // Request total count matching filters
+        { count: "exact" } // Request total count matching filters
       )
       .eq("user_id", userId);
+
+    if (tags.length !== 0) {
+      query.in("prompt_tags.tag_id", tags);
+    }
 
     // Apply search filter if provided
     if (search) {
@@ -182,6 +181,8 @@ export const promptRepository = {
 
     // The count returned by Supabase with { count: 'exact' } is the total count matching filters
     const totalCount = count ?? 0;
+
+    console.log("Fetched prompts:", JSON.stringify(prompts));
 
     return { prompts, totalCount };
   },
@@ -229,7 +230,8 @@ export const promptRepository = {
       .single();
 
     if (updateError) {
-      if (updateError.code === "23505") { // Unique constraint violation
+      if (updateError.code === "23505") {
+        // Unique constraint violation
         throw new Error("A prompt with this name already exists for your account");
       }
       throw new Error(`Failed to update prompt: ${updateError.message}`);
@@ -242,18 +244,11 @@ export const promptRepository = {
     return updatedPrompt;
   },
 
-  updatePromptTags: async (
-    context: IRequestContext,
-    promptId: string,
-    tagIds: string[]
-  ) => {
+  updatePromptTags: async (context: IRequestContext, promptId: string, tagIds: string[]) => {
     const supabase = createSupabaseServerInstance(context);
 
     // Delete all existing prompt-tag associations
-    const { error: deleteError } = await supabase
-      .from("prompt_tags")
-      .delete()
-      .eq("prompt_id", promptId);
+    const { error: deleteError } = await supabase.from("prompt_tags").delete().eq("prompt_id", promptId);
 
     if (deleteError) {
       throw new Error(`Failed to update prompt tags: ${deleteError.message}`);
@@ -265,14 +260,12 @@ export const promptRepository = {
     }
 
     // Create new prompt-tag associations
-    const promptTags = tagIds.map(tagId => ({
+    const promptTags = tagIds.map((tagId) => ({
       prompt_id: promptId,
       tag_id: tagId,
     }));
 
-    const { error: insertError } = await supabase
-      .from("prompt_tags")
-      .insert(promptTags);
+    const { error: insertError } = await supabase.from("prompt_tags").insert(promptTags);
 
     if (insertError) {
       throw new Error(`Failed to associate prompt with tags: ${insertError.message}`);
