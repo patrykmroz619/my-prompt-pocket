@@ -16,7 +16,9 @@ const fillPromptContent = (content: string, values: ParameterValues) => {
   let filledContent = content;
   // Replace each parameter with its value
   for (const [name, value] of Object.entries(values)) {
-    filledContent = content.replace(new RegExp(`{{\\s*${name}\\s*}}`, "g"), value);
+    if (value) {
+      filledContent = filledContent.replace(new RegExp(`{{\\s*${name}\\s*}}`, "g"), value);
+    }
   }
 
   return filledContent;
@@ -47,6 +49,8 @@ export function useParameterFill(params: UseParameterFillParams) {
 
   const formValues = form.watch();
 
+  console.log("Form values:", formValues);
+
   // State for copy operation
   const [isCopied, setIsCopied] = useState(false);
 
@@ -54,6 +58,8 @@ export function useParameterFill(params: UseParameterFillParams) {
     () => fillPromptContent(prompt.content, formValues),
     [prompt.content, formValues]
   );
+
+  console.log("Filled prompt content:", filledPromptContent);
 
   const onSubmit = form.handleSubmit(async (data) => {
     console.log("Form submitted with data:", data);
