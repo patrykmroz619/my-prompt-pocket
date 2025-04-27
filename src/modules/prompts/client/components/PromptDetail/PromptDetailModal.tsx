@@ -14,6 +14,7 @@ import { Skeleton } from "../../../../../shared/components/ui/skeleton";
 import { formatFullDate } from "../../../../../shared/utils/formatDate";
 import { Loader2 } from "lucide-react";
 import type { PromptParameter } from "../../../../../shared/types/types";
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 interface PromptDetailModalProps {
   promptId: string;
@@ -100,16 +101,12 @@ export function PromptDetailModal({ promptId, onClose, onEdit, onDelete, isDelet
   return (
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent
-        className="sm:max-w-lg"
+        className="sm:max-w-2xl max-h-[85vh] overflow-auto"
         aria-labelledby="prompt-detail-title"
         aria-describedby="prompt-detail-description"
       >
-        <DialogHeader>
-          <DialogTitle id="prompt-detail-title">Prompt Details</DialogTitle>
-        </DialogHeader>
-
         {/* Modal Body */}
-        <div id="prompt-detail-description" className="space-y-4">
+        <div className="space-y-4">
           {isLoading && (
             <div className="space-y-2" aria-label="Loading prompt details">
               <Skeleton className="h-6 w-3/4" />
@@ -134,14 +131,14 @@ export function PromptDetailModal({ promptId, onClose, onEdit, onDelete, isDelet
 
           {!isLoading && !error && prompt && (
             <>
-              <div>
-                <h3 className="font-semibold text-lg">{prompt.name}</h3>
-                {prompt.description && <p className="text-muted-foreground mt-1">{prompt.description}</p>}
-              </div>
+              <DialogHeader>
+                <DialogTitle id="prompt-detail-title">{prompt.name}</DialogTitle>
+                <DialogDescription id="prompt-detail-description">{prompt.description}</DialogDescription>
+              </DialogHeader>
 
               <div>
                 <h4 className="text-sm font-medium mb-2">Prompt Content</h4>
-                <div className="p-3 border rounded-md bg-muted/40">
+                <div className="p-3 overflow-auto max-h-48 border rounded-md bg-muted/40">
                   {highlightParameters(prompt.content, prompt.parameters)}
                 </div>
               </div>
@@ -153,7 +150,7 @@ export function PromptDetailModal({ promptId, onClose, onEdit, onDelete, isDelet
                     {prompt.parameters.map((param) => (
                       <li key={param.name} className="flex items-center gap-2">
                         <Badge variant="outline" className="font-mono">
-                          {`{{${param.name}}}`}
+                          {`${param.name}`}
                         </Badge>
                         <span className="text-xs text-muted-foreground">
                           {param.type === "short-text" ? "Short text" : "Long text"}

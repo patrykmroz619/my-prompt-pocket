@@ -107,6 +107,7 @@ const PromptsPage: React.FC<PromptsPageProps> = ({ initialData }) => {
             selectedTagIds={selectedTagIds}
             onResetFilters={handleResetFilters}
             isInitialLoad={isInitialLoad}
+            onPromptDeleted={refetch}
           />
 
           {data.pagination.total_pages > 1 && (
