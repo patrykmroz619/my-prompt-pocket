@@ -1,6 +1,6 @@
-import { defineMiddleware } from 'astro:middleware';
-import { createSupabaseServerInstance } from '@shared/db/supabase.client';
-import type { IRequestContext } from '@shared/types/types';
+import { defineMiddleware } from "astro:middleware";
+import { createSupabaseServerInstance } from "@shared/db/supabase.client";
+import type { IRequestContext } from "@shared/types/types";
 
 // Public paths - Auth UI pages & API endpoints
 const PUBLIC_PATHS = [
@@ -17,13 +17,14 @@ const PUBLIC_PATHS = [
   "/api/auth/forgot-password",
   "/api/auth/reset-password",
   "/api/auth/callback", // OAuth callback handling
+  "/api/prompts/improve",
 ];
 
 export const onRequest = defineMiddleware(async ({ locals, cookies, url, request, redirect }, next) => {
   const currentPath = url.pathname;
 
   // Allow access to explicitly public paths
-  if (PUBLIC_PATHS.some(path => currentPath === path || currentPath.startsWith(path + "/"))) {
+  if (PUBLIC_PATHS.some((path) => currentPath === path || currentPath.startsWith(path + "/"))) {
     return next();
   }
 
@@ -35,7 +36,7 @@ export const onRequest = defineMiddleware(async ({ locals, cookies, url, request
   const requestContext: IRequestContext = {
     cookies,
     headers: request.headers,
-  }
+  };
 
   const supabase = createSupabaseServerInstance(requestContext);
 
