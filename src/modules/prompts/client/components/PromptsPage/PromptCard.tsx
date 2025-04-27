@@ -2,7 +2,7 @@ import React from "react";
 import { Pencil } from "lucide-react";
 
 import { Badge } from "@shared/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@shared/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from "@shared/components/ui/card";
 import { Button } from "@shared/components/ui/button";
 import type { PromptDto } from "@shared/types/types";
 
@@ -61,10 +61,10 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, onClick }) => {
         }
       }}
     >
-      <CardHeader className="pb-2 flex flex-row justify-between items-start">
+      <CardHeader className="flex flex-row justify-between items-start">
         <div>
-          <CardTitle className="text-xl line-clamp-1">{prompt.name}</CardTitle>
-          <p className="text-sm text-muted-foreground">{formattedDate}</p>
+          <CardTitle className="mb-2">{prompt.name}</CardTitle>
+          <CardDescription className="text-xs">{formattedDate}</CardDescription>
         </div>
         <Button
           variant="ghost"
