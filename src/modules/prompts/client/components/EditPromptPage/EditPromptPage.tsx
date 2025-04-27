@@ -16,7 +16,7 @@ export const EditPromptPage = ({ prompt }: EditPromptPageProps) => {
     try {
       await promptService.updatePrompt(prompt.id, data);
       toast.success("Prompt updated successfully");
-      navigate("/prompts");
+      navigate("/");
     } catch (error) {
       console.error("Error updating prompt:", error);
 

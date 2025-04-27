@@ -1,8 +1,62 @@
 ---
 import Layout from "@shared/components/layout/AppLayout/AppLayout.astro";
+import PromptsPage from "@modules/prompts/client/components/PromptsPage";
+import type { PaginatedResponse, PromptDto } from "@shared/types/types";
+import { promptService } from "@modules/prompts/server/services/prompt.service";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// Get user ID from Astro.locals
+const userId = Astro.locals.user?.id;
+
+// Read query parameters from URL
+const searchParam = Astro.url.searchParams.get("search") || "";
+const tagsParam = Astro.url.searchParams.get("tags") || "";
+const pageParam = Astro.url.searchParams.get("page") || "1";
+const pageSizeParam = Astro.url.searchParams.get("page_size") || "10";
+const sortByParam = Astro.url.searchParams.get("sort_by") || "created_at";
+const sortDirParam = Astro.url.searchParams.get("sort_dir") || "desc";
+
+// Convert page parameter to number
+const page = parseInt(pageParam, 10);
+const pageSize = parseInt(pageSizeParam, 10);
+
+// Prepare filter parameters for server-side fetch
+const filterParams = {
+  search: searchParam || undefined,
+  tags: tagsParam ? tagsParam.split(",").filter(Boolean) : [],
+  page: isNaN(page) ? 1 : page,
+  page_size: isNaN(pageSize) ? 10 : pageSize,
+  sort_by: (sortByParam as "name" | "created_at" | "updated_at") || "created_at",
+  sort_dir: (sortDirParam as "asc" | "desc") || "desc",
+};
+
+// Server-side fetch of initial prompts data using the service
+let initialData: PaginatedResponse<PromptDto> = {
+  data: [],
+  pagination: {
+    total_items: 0,
+    total_pages: 1,
+    current_page: 1,
+    page_size: 10,
+  },
+};
+
+if (userId) {
+  try {
+    // Use the prompt service to get prompts with filters from query parameters
+    initialData = await promptService.getPrompts(
+      {
+        headers: Astro.request.headers,
+        cookies: Astro.cookies,
+      },
+      userId,
+      filterParams
+    );
+  } catch (error) {
+    console.error("Error fetching initial prompts:", error);
+  }
+}
 ---
 
-<Layout> App </Layout>
+<Layout>
+  <PromptsPage client:load initialData={initialData} />
+</Layout>

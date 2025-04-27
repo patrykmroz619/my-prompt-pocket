@@ -12,7 +12,7 @@ export const CreatePromptPage = () => {
     try {
       await promptService.createPrompt(data);
       toast.success("Prompt created successfully");
-      navigate("/prompts");
+      navigate("/");
     } catch (error) {
       console.error("Error creating prompt:", error);
 

@@ -6,7 +6,7 @@ import { promptService } from "@modules/prompts/server/services/prompt.service";
 const { id: promptId } = Astro.params;
 
 if (!promptId) {
-  return Astro.redirect("/prompts");
+  return Astro.redirect("/");
 }
 
 // Fetch prompt data on the server side
@@ -15,7 +15,7 @@ try {
   prompt = await promptService.getPromptById(Astro.locals.requestContext, promptId);
 } catch (error) {
   console.error("Error fetching prompt:", error);
-  return Astro.redirect("/prompts");
+  return Astro.redirect("/");
 }
 ---
 
