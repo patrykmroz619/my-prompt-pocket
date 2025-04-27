@@ -41,6 +41,9 @@ export function PromptCopyButton({ prompt, variant = "default", className }: Pro
 
   const handleCopySuccess = () => {
     toast.success("Prompt copied to clipboard!");
+    setTimeout(() => {
+      handleModalClose();
+    }, 1000);
   };
 
   return (

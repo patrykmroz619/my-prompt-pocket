@@ -24,7 +24,7 @@ export function usePromptsData(
       },
     }
   );
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   // Debounce search to reduce API calls
@@ -67,7 +67,7 @@ export function usePromptsData(
     loading: loading && data.data.length === 0,
     error,
     refetch: () => {
-      fetchData()
-    }
+      fetchData();
+    },
   };
 }

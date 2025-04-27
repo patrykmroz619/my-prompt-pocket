@@ -101,11 +101,12 @@ export function PromptDetailModal({ promptId, onClose, onEdit, onDelete, isDelet
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent
-        className="sm:max-w-2xl max-h-[85vh] overflow-auto"
-        aria-labelledby="prompt-detail-title"
-        aria-describedby="prompt-detail-description"
-      >
+      <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-auto">
+        <DialogHeader>
+          <DialogTitle>{prompt?.name}</DialogTitle>
+          <DialogDescription>{prompt?.description}</DialogDescription>
+        </DialogHeader>
+
         {/* Modal Body */}
         <div className="space-y-4">
           {isLoading && (
@@ -132,11 +133,6 @@ export function PromptDetailModal({ promptId, onClose, onEdit, onDelete, isDelet
 
           {!isLoading && !error && prompt && (
             <>
-              <DialogHeader>
-                <DialogTitle id="prompt-detail-title">{prompt.name}</DialogTitle>
-                <DialogDescription id="prompt-detail-description">{prompt.description}</DialogDescription>
-              </DialogHeader>
-
               <div>
                 <h4 className="text-sm font-medium mb-2">Prompt Content</h4>
                 <div className="p-3 overflow-auto max-h-48 border rounded-md bg-muted/40">
