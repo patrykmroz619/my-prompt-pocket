@@ -15,6 +15,7 @@ import { formatFullDate } from "../../../../../shared/utils/formatDate";
 import { Loader2 } from "lucide-react";
 import type { PromptParameter } from "../../../../../shared/types/types";
 import { DialogDescription } from "@radix-ui/react-dialog";
+import { PromptCopyButton } from "../PromptCopyButton";
 
 interface PromptDetailModalProps {
   promptId: string;
@@ -186,30 +187,33 @@ export function PromptDetailModal({ promptId, onClose, onEdit, onDelete, isDelet
 
         {/* Modal Footer */}
         <DialogFooter className="gap-2">
-          <Button variant="outline" onClick={onClose} ref={closeButtonRef} disabled={isDeleting}>
+          {onDelete && (
+            <Button className="sm:mr-auto" variant="destructive" onClick={handleDeleteRequest} disabled={isDeleting}>
+              {isDeleting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                "Delete"
+              )}
+            </Button>
+          )}
+          {onEdit && (
+            <Button variant="outline" onClick={handleEdit} disabled={isDeleting}>
+              Edit prompt
+            </Button>
+          )}
+          <Button
+            className="order-[-1] sm:order-0"
+            variant="outline"
+            onClick={onClose}
+            ref={closeButtonRef}
+            disabled={isDeleting}
+          >
             Close
           </Button>
-          {!isLoading && prompt && (
-            <>
-              {onEdit && (
-                <Button variant="outline" onClick={handleEdit} disabled={isDeleting}>
-                  Edit
-                </Button>
-              )}
-              {onDelete && (
-                <Button variant="destructive" onClick={handleDeleteRequest} disabled={isDeleting}>
-                  {isDeleting ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Deleting...
-                    </>
-                  ) : (
-                    "Delete"
-                  )}
-                </Button>
-              )}
-            </>
-          )}
+          {prompt && <PromptCopyButton prompt={prompt} />}
         </DialogFooter>
       </DialogContent>
 

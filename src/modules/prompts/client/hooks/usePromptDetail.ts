@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import type { PromptDetailViewModel } from "../../shared/types/prompt-detail.types";
-import { toPromptDetailViewModel } from "../../shared/types/prompt-detail.types";
+
 import type { PromptDto } from "../../../../shared/types/types";
 
 interface UsePromptDetailResult {
-  prompt: PromptDetailViewModel | null;
+  prompt: PromptDto | null;
   isLoading: boolean;
   error: Error | null;
 }
@@ -13,7 +12,7 @@ interface UsePromptDetailResult {
  * Custom hook to fetch prompt details from the API
  */
 export function usePromptDetail(promptId: string): UsePromptDetailResult {
-  const [prompt, setPrompt] = useState<PromptDetailViewModel | null>(null);
+  const [prompt, setPrompt] = useState<PromptDto | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -35,7 +34,7 @@ export function usePromptDetail(promptId: string): UsePromptDetailResult {
         }
 
         const data: PromptDto = await response.json();
-        setPrompt(toPromptDetailViewModel(data));
+        setPrompt(data);
       } catch (err) {
         setError(err instanceof Error ? err : new Error("An unknown error occurred"));
       } finally {

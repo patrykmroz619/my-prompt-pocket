@@ -5,6 +5,7 @@ import { Badge } from "@shared/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from "@shared/components/ui/card";
 import { Button } from "@shared/components/ui/button";
 import type { PromptDto } from "@shared/types/types";
+import { PromptCopyButton } from "../PromptCopyButton";
 
 interface PromptCardProps {
   prompt: PromptDto;
@@ -66,15 +67,18 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, onClick }) => {
           <CardTitle className="mb-2">{prompt.name}</CardTitle>
           <CardDescription className="text-xs">{formattedDate}</CardDescription>
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="h-8 w-8 p-0"
-          onClick={handleEditClick}
-          aria-label={`Edit ${prompt.name}`}
-        >
-          <Pencil className="h-4 w-4" />
-        </Button>
+        <div className="flex gap-2">
+          <PromptCopyButton prompt={prompt} variant="icon" className="h-8 w-8 p-0" />
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0"
+            onClick={handleEditClick}
+            aria-label={`Edit ${prompt.name}`}
+          >
+            <Pencil className="h-4 w-4" />
+          </Button>
+        </div>
       </CardHeader>
 
       <CardContent className="flex-grow">

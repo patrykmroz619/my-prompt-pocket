@@ -61,7 +61,7 @@ This application is organized around an authenticated main layout with a top nav
 ### 2.6 Parameter Filling (Modal)
 
 - **View Name**: Parameter Fill
-  **Triggered by**: “Copy” action on a prompt card (if parameters exist)
+  **Triggered by**: “Copy” action on a prompt card and prompt detail modal (if parameters exist)
   **Purpose**: Let the user fill parameter values and copy final text to clipboard.
   **Key Information**: Parameter fields, real-time preview, copy confirmation.
   **Key View Components**: Modal form, dynamic inputs for each parameter, preview area, “Copy to Clipboard” button.
