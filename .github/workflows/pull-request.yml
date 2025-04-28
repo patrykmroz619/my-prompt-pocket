@@ -16,19 +16,27 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
-          cache: "npm"
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install
 
       - name: Lint code
-        run: npm run lint
+        run: bun run lint
 
   unit-test:
     name: Unit Tests
     needs: lint
     runs-on: ubuntu-latest
-
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      OPENROUTER_BASE_URL: ${{ secrets.OPENROUTER_BASE_URL }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -37,13 +45,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
-          cache: "npm"
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install
 
       - name: Run unit tests with coverage
-        run: npm test -- --coverage
+        run: bun test -- --coverage
 
       - name: Upload unit test coverage
         uses: actions/upload-artifact@v4
@@ -56,15 +68,11 @@ jobs:
     name: E2E Tests
     needs: lint
     runs-on: ubuntu-latest
-    environment: integration
     env:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
       OPENROUTER_BASE_URL: ${{ secrets.OPENROUTER_BASE_URL }}
-      E2E_USER_ID: ${{ vars.E2E_USER_ID }}
-      E2E_USER_NAME: ${{ vars.E2E_USER_NAME }}
-      E2E_USER_PASSWORD: ${{ vars.E2E_USER_PASSWORD }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -73,22 +81,26 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
-          cache: "npm"
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+        run: bunx playwright install --with-deps chromium
 
       - name: Start dev server
-        run: npm run dev:e2e
+        run: bun run dev:e2e
 
       - name: Wait for server to be ready
-        run: npx wait-on http://localhost:4321
+        run: bunx wait-on http://localhost:4321
 
       - name: Run E2E tests with coverage
-        run: npm run test:e2e
+        run: bun run test:e2e
 
       - name: Upload Playwright report
         if: always()
