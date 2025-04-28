@@ -10,9 +10,7 @@ export const AssignPromptToTagCommandSchema = z.object({
   }),
 });
 
-export type ValidatedAssignPromptToTagCommand = z.infer<
-  typeof AssignPromptToTagCommandSchema
->;
+export type ValidatedAssignPromptToTagCommand = z.infer<typeof AssignPromptToTagCommandSchema>;
 
 // Schema for validating DELETE /api/prompt-tags request body
 export const RemoveTagFromPromptCommandSchema = z.object({
@@ -24,6 +22,4 @@ export const RemoveTagFromPromptCommandSchema = z.object({
   }),
 });
 
-export type ValidatedRemoveTagFromPromptCommand = z.infer<
-  typeof RemoveTagFromPromptCommandSchema
->;
+export type ValidatedRemoveTagFromPromptCommand = z.infer<typeof RemoveTagFromPromptCommandSchema>;

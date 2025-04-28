@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import {
   AssignPromptToTagCommandSchema,
-  RemoveTagFromPromptCommandSchema
+  RemoveTagFromPromptCommandSchema,
 } from "@modules/prompts/shared/schemas/prompt-tags.schema";
 import { promptTagsService } from "@modules/prompts/server/services/prompt-tags.service";
 import {
@@ -9,7 +9,7 @@ import {
   DuplicateAssociationError,
   PromptNotFoundError,
   TagNotFoundError,
-  UnauthorizedAssociationError
+  UnauthorizedAssociationError,
 } from "@modules/prompts/server/exceptions/prompt-tag.exceptions";
 
 export const POST: APIRoute = async ({ request, cookies, locals }) => {
@@ -21,20 +21,20 @@ export const POST: APIRoute = async ({ request, cookies, locals }) => {
     const user = locals.user;
 
     if (!user) {
-      return new Response(
-        JSON.stringify({ error: "Unauthorized", message: "You must be logged in" }),
-        { status: 401, headers: { "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Unauthorized", message: "You must be logged in" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     // Parse and validate the request body
     try {
       body = await request.json();
-    } catch (error) {
-      return new Response(
-        JSON.stringify({ error: "Bad Request", message: "Invalid JSON in request body" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
-      );
+    } catch {
+      return new Response(JSON.stringify({ error: "Bad Request", message: "Invalid JSON in request body" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     // Validate with Zod schema
@@ -51,19 +51,13 @@ export const POST: APIRoute = async ({ request, cookies, locals }) => {
     }
 
     // Call service function to associate tag with prompt
-    const promptTagAssociation = await promptTagsService.assignTagToPrompt(
-      result.data,
-      requestContext
-    );
+    const promptTagAssociation = await promptTagsService.assignTagToPrompt(result.data, requestContext);
 
     // Return successful response
-    return new Response(
-      JSON.stringify(promptTagAssociation),
-      {
-        status: 201,
-        headers: { "Content-Type": "application/json" }
-      }
-    );
+    return new Response(JSON.stringify(promptTagAssociation), {
+      status: 201,
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (error) {
     // Handle specific error cases with appropriate status codes
     if (error instanceof PromptNotFoundError || error instanceof TagNotFoundError) {
@@ -75,14 +69,20 @@ export const POST: APIRoute = async ({ request, cookies, locals }) => {
 
     if (error instanceof DuplicateAssociationError) {
       return new Response(
-        JSON.stringify({ error: "Conflict", message: error instanceof Error ? error.message : "Duplicate association" }),
+        JSON.stringify({
+          error: "Conflict",
+          message: error instanceof Error ? error.message : "Duplicate association",
+        }),
         { status: 409, headers: { "Content-Type": "application/json" } }
       );
     }
 
     if (error instanceof UnauthorizedAssociationError) {
       return new Response(
-        JSON.stringify({ error: "Forbidden", message: error instanceof Error ? error.message : "Unauthorized operation" }),
+        JSON.stringify({
+          error: "Forbidden",
+          message: error instanceof Error ? error.message : "Unauthorized operation",
+        }),
         { status: 403, headers: { "Content-Type": "application/json" } }
       );
     }
@@ -110,20 +110,20 @@ export const DELETE: APIRoute = async ({ request, cookies, locals }) => {
     const user = locals.user;
 
     if (!user) {
-      return new Response(
-        JSON.stringify({ error: "Unauthorized", message: "You must be logged in" }),
-        { status: 401, headers: { "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Unauthorized", message: "You must be logged in" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     // Parse and validate the request body
     try {
       body = await request.json();
-    } catch (error) {
-      return new Response(
-        JSON.stringify({ error: "Bad Request", message: "Invalid JSON in request body" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
-      );
+    } catch {
+      return new Response(JSON.stringify({ error: "Bad Request", message: "Invalid JSON in request body" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     // Validate with Zod schema
@@ -140,19 +140,13 @@ export const DELETE: APIRoute = async ({ request, cookies, locals }) => {
     }
 
     // Call service function to remove tag from prompt
-    await promptTagsService.removeTagFromPrompt(
-      result.data,
-      requestContext
-    );
+    await promptTagsService.removeTagFromPrompt(result.data, requestContext);
 
     // Return successful response
-    return new Response(
-      null,
-      {
-        status: 204,
-        headers: { "Content-Type": "application/json" }
-      }
-    );
+    return new Response(null, {
+      status: 204,
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (error) {
     // Handle specific error cases
     if (error instanceof PromptNotFoundError || error instanceof TagNotFoundError) {
@@ -164,14 +158,20 @@ export const DELETE: APIRoute = async ({ request, cookies, locals }) => {
 
     if (error instanceof AssociationNotFoundError) {
       return new Response(
-        JSON.stringify({ error: "Not Found", message: error instanceof Error ? error.message : "Association not found" }),
+        JSON.stringify({
+          error: "Not Found",
+          message: error instanceof Error ? error.message : "Association not found",
+        }),
         { status: 404, headers: { "Content-Type": "application/json" } }
       );
     }
 
     if (error instanceof UnauthorizedAssociationError) {
       return new Response(
-        JSON.stringify({ error: "Forbidden", message: error instanceof Error ? error.message : "Unauthorized operation" }),
+        JSON.stringify({
+          error: "Forbidden",
+          message: error instanceof Error ? error.message : "Unauthorized operation",
+        }),
         { status: 403, headers: { "Content-Type": "application/json" } }
       );
     }

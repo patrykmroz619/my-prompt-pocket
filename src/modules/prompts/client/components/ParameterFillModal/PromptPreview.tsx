@@ -1,6 +1,7 @@
-interface PromptPreviewProps {
+import type { HTMLAttributes } from "react";
+
+interface PromptPreviewProps extends HTMLAttributes<HTMLDivElement> {
   content: string;
-  [key: string]: any;
 }
 
 export function PromptPreview({ content, ...props }: PromptPreviewProps) {

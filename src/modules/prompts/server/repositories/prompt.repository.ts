@@ -144,6 +144,7 @@ export const promptRepository = {
     // Base query to select prompts and their tags - use LEFT JOIN to include prompts without tags
     let query = supabase
       .from("prompts")
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .select<string, any>( // Use 'any' temporarily for complex select
         `
         *,

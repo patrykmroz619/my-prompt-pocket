@@ -14,11 +14,11 @@ if (code) {
 
   if (error) {
     console.error("Auth callback error:", error.message);
-    return redirect(`/auth/login?error=${encodeURIComponent(error.message)}`);
+    return Astro.redirect(`/auth/login?error=${encodeURIComponent(error.message)}`);
   }
 
-  return redirect("/");
+  return Astro.redirect("/");
 } else {
-  return redirect("/auth/login?error=Missing+code+parameter");
+  return Astro.redirect("/auth/login?error=Missing+code+parameter");
 }
 ---

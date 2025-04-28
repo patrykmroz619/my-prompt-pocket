@@ -5,9 +5,7 @@ import * as z from "zod";
 // Server-side validation schema
 const registerSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters" })
+  password: z.string().min(8, { message: "Password must be at least 8 characters" }),
 });
 
 export const POST: APIRoute = async ({ request, cookies }) => {
@@ -22,7 +20,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       return new Response(
         JSON.stringify({
           error: "Validation failed",
-          details: formattedErrors
+          details: formattedErrors,
         }),
         { status: 400 }
       );
@@ -49,9 +47,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     });
   } catch (error) {
     console.error("Registration error:", error);
-    return new Response(
-      JSON.stringify({ error: "An unexpected error occurred during registration" }),
-      { status: 500 }
-    );
+    return new Response(JSON.stringify({ error: "An unexpected error occurred during registration" }), { status: 500 });
   }
 };

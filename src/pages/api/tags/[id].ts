@@ -11,23 +11,23 @@ export const PATCH: APIRoute = async ({ request, cookies, locals, params }) => {
     const tagId = params.id;
 
     if (!userId) {
-      return new Response(
-        JSON.stringify({ error: "Unauthorized" }),
-        { status: 401, headers: { "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     if (!tagId) {
-      return new Response(
-        JSON.stringify({ error: "Tag ID is required" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Tag ID is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     // Create request context to pass to service
     const context: IRequestContext = {
       headers: request.headers,
-      cookies
+      cookies,
     };
 
     // Parse and validate the request body
@@ -42,39 +42,41 @@ export const PATCH: APIRoute = async ({ request, cookies, locals, params }) => {
       // Return successful response with the updated tag
       return new Response(JSON.stringify(updatedTag), {
         status: 200,
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
       });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (validationError: any) {
       return new Response(
         JSON.stringify({
           error: "Invalid input",
-          message: validationError.message
+          message: validationError.message,
         }),
         { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     // Handle specific error types
     if (error.name === "TagAlreadyExistsError") {
-      return new Response(
-        JSON.stringify({ error: "Tag name already exists" }),
-        { status: 409, headers: { "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Tag name already exists" }), {
+        status: 409,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     if (error.name === "TagNotFoundError") {
-      return new Response(
-        JSON.stringify({ error: "Tag not found" }),
-        { status: 404, headers: { "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Tag not found" }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     // Handle unexpected errors
     console.error("Error updating tag:", error);
-    return new Response(
-      JSON.stringify({ error: "Internal server error" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 };
 
@@ -101,7 +103,7 @@ export const DELETE: APIRoute = async ({ params, request, cookies, locals }) => 
     // Create request context to pass to service
     const context: IRequestContext = {
       headers: request.headers,
-      cookies
+      cookies,
     };
 
     // Delete the tag

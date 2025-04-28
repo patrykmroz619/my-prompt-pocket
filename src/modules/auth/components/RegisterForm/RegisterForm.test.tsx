@@ -312,7 +312,7 @@ describe("RegisterForm", () => {
   describe("Loading State", () => {
     it("should disable form elements during submission", async () => {
       // Arrange
-      mockFetch.mockReturnValue(new Promise(() => {})); // Never resolving promise
+      mockFetch.mockReturnValue(new Promise(() => null)); // Never resolving promise
       renderRegisterForm();
 
       // Act

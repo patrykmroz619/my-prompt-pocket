@@ -3,10 +3,10 @@ import { createSupabaseServerInstance } from "../../../shared/db/supabase.client
 
 export const GET: APIRoute = async ({ request, cookies, redirect }) => {
   const requestUrl = new URL(request.url);
-  const code = requestUrl.searchParams.get('code');
+  const code = requestUrl.searchParams.get("code");
 
   if (!code) {
-    return redirect('/auth/login?error=Missing+code+parameter');
+    return redirect("/auth/login?error=Missing+code+parameter");
   }
 
   const supabase = createSupabaseServerInstance({ cookies, headers: request.headers });
@@ -18,5 +18,5 @@ export const GET: APIRoute = async ({ request, cookies, redirect }) => {
     return redirect(`/auth/login?error=${encodeURIComponent(error.message)}`);
   }
 
-  return redirect('/');
+  return redirect("/");
 };
