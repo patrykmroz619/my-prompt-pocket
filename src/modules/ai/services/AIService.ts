@@ -6,7 +6,7 @@ const openai = new OpenAI({
   apiKey: import.meta.env.OPENROUTER_API_KEY,
 });
 
-const MODEL = "google/gemini-2.0-flash-001";
+const MODEL = "deepseek/deepseek-r1:free";
 
 const textCompletion = async (params: ITextCompletionParams) => {
   const { messages } = params;

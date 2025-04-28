@@ -11,8 +11,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     password,
   });
 
-  console.log("Login data:", data);
-
   if (error) {
     return new Response(JSON.stringify({ error: error.message }), {
       status: 400,

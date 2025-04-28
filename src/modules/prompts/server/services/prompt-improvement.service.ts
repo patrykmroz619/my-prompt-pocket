@@ -48,9 +48,6 @@ Maintain a professional and analytical tone. Do not include any conversational f
       ],
     });
 
-    console.log("AI response:");
-    console.log(aiMessage);
-
     if (!aiMessage) {
       throw new Error("AI did not return a valid response");
     }

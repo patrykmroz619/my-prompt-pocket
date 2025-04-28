@@ -3,6 +3,8 @@ import type {
   PaginatedResponse,
   PromptDto,
   PromptFilterParams,
+  PromptImprovementCommand,
+  PromptImprovementDto,
   UpdatePromptCommand,
 } from "@shared/types/types";
 
@@ -157,5 +159,45 @@ export const promptService = {
       }
       throw new Error(errorMessage);
     }
+  },
+
+  /**
+   * Requests AI-powered improvements for prompt content
+   *
+   * @param data Command containing the prompt content to improve
+   * @returns Promise with PromptImprovementDto containing improved content and explanation
+   * @throws Error if the API call fails
+   */
+  async improvePrompt(data: PromptImprovementCommand): Promise<PromptImprovementDto> {
+    const response = await fetch("/api/prompts/improve", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      let errorMessage = "Failed to improve prompt";
+
+      if (response.status === 429) {
+        errorMessage = "Rate limit exceeded. Please try again later.";
+      } else if (response.status === 503) {
+        errorMessage = "AI service unavailable. Please try again later.";
+      } else {
+        try {
+          const errorData = await response.json();
+          if (errorData.error) {
+            errorMessage = errorData.error;
+          }
+        } catch (e) {
+          // If we can't parse the error, use the default message
+        }
+      }
+
+      throw new Error(errorMessage);
+    }
+
+    return await response.json();
   },
 };

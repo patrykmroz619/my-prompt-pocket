@@ -49,8 +49,6 @@ export function useParameterFill(params: UseParameterFillParams) {
 
   const formValues = form.watch();
 
-  console.log("Form values:", formValues);
-
   // State for copy operation
   const [isCopied, setIsCopied] = useState(false);
 
@@ -59,10 +57,7 @@ export function useParameterFill(params: UseParameterFillParams) {
     [prompt.content, formValues]
   );
 
-  console.log("Filled prompt content:", filledPromptContent);
-
   const onSubmit = form.handleSubmit(async (data) => {
-    console.log("Form submitted with data:", data);
     try {
       const promptToCopy = fillPromptContent(prompt.content, data);
       await navigator.clipboard.writeText(promptToCopy);

@@ -182,8 +182,6 @@ export const promptRepository = {
     // The count returned by Supabase with { count: 'exact' } is the total count matching filters
     const totalCount = count ?? 0;
 
-    console.log("Fetched prompts:", JSON.stringify(prompts));
-
     return { prompts, totalCount };
   },
 
