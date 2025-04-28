@@ -55,7 +55,7 @@ jobs:
         run: bun install
 
       - name: Run unit tests with coverage
-        run: bun test -- --coverage
+        run: bun run test:coverage
 
       - name: Upload unit test coverage
         uses: actions/upload-artifact@v4
