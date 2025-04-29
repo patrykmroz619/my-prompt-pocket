@@ -19,6 +19,7 @@
     "lint:fix": "eslint ./src --ext .js,.jsx,.ts,.tsx,.astro --fix"
   },
   "dependencies": {
+    "@astrojs/netlify": "^6.3.1",
     "@astrojs/react": "4.2.4",
     "@hookform/resolvers": "5.0.1",
     "@radix-ui/react-avatar": "1.1.6",

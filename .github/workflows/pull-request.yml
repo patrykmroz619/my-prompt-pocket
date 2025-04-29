@@ -32,11 +32,6 @@ jobs:
     name: Unit Tests
     needs: lint
     runs-on: ubuntu-latest
-    env:
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-      OPENROUTER_BASE_URL: ${{ secrets.OPENROUTER_BASE_URL }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
