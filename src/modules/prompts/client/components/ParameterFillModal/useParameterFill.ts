@@ -7,10 +7,10 @@ import * as z from "zod";
 // Parameter value state type
 export type ParameterValues = Record<string, string>;
 
-type UseParameterFillParams = {
+interface UseParameterFillParams {
   prompt: PromptDto;
   onSuccess?: (() => void) | undefined;
-};
+}
 
 const fillPromptContent = (content: string, values: ParameterValues) => {
   let filledContent = content;

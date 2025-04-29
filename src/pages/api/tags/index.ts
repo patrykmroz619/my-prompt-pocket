@@ -9,16 +9,16 @@ export const POST: APIRoute = async ({ request, cookies, locals }) => {
     const userId = locals.user?.id;
 
     if (!userId) {
-      return new Response(
-        JSON.stringify({ error: "Unauthorized" }),
-        { status: 401, headers: { "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     // Create request context to pass to service
     const context: IRequestContext = {
       headers: request.headers,
-      cookies
+      cookies,
     };
 
     // Parse and validate the request body
@@ -33,32 +33,34 @@ export const POST: APIRoute = async ({ request, cookies, locals }) => {
       // Return successful response with the created tag
       return new Response(JSON.stringify(newTag), {
         status: 201,
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
       });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (validationError: any) {
       return new Response(
         JSON.stringify({
           error: "Invalid input",
-          message: validationError.message
+          message: validationError.message,
         }),
         { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     // Handle specific error types
     if (error.name === "TagAlreadyExistsError") {
-      return new Response(
-        JSON.stringify({ error: "Tag already exists" }),
-        { status: 409, headers: { "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Tag already exists" }), {
+        status: 409,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     // Handle unexpected errors
     console.error("Error creating tag:", error);
-    return new Response(
-      JSON.stringify({ error: "Internal server error" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 };
 
@@ -68,33 +70,33 @@ export const GET: APIRoute = async ({ locals, cookies, request }) => {
     const userId = locals.user?.id;
 
     if (!userId) {
-      return new Response(
-        JSON.stringify({ error: "Unauthorized" }),
-        { status: 401, headers: { "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     // Create request context to pass to service
     const context: IRequestContext = {
       headers: request.headers,
-      cookies
+      cookies,
     };
 
     // Call service to get the tags for the user
     const tags = await tagService.getTagsForUser(userId, context);
 
     // Return successful response with the tags
-    return new Response(
-      JSON.stringify({ data: tags }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
-    );
-
+    return new Response(JSON.stringify({ data: tags }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     // Handle unexpected errors
     console.error("Error fetching tags:", error);
-    return new Response(
-      JSON.stringify({ error: "Internal server error" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 };

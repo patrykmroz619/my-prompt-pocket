@@ -27,17 +27,19 @@ export function useQueryParams<T extends Record<string, string | string[]>>(
           // Handle array values
           // First ensure the value is initialized as an array
           if (!Array.isArray(initialParams[key])) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (initialParams as any)[key] = [];
           }
 
           // Split comma-separated values
-          if (value.includes(',')) {
-            (initialParams[key] as unknown as string[]).push(...value.split(','));
+          if (value.includes(",")) {
+            (initialParams[key] as unknown as string[]).push(...value.split(","));
           } else {
             (initialParams[key] as unknown as string[]).push(value);
           }
         } else {
           // Handle string value
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (initialParams as any)[key] = value;
         }
       }
@@ -66,23 +68,26 @@ export function useQueryParams<T extends Record<string, string | string[]>>(
       }
 
       if (Array.isArray(value) && value.length > 0) {
-        url.searchParams.set(key, value.join(','));
+        url.searchParams.set(key, value.join(","));
       } else if (!Array.isArray(value) && value !== "") {
         url.searchParams.set(key, value);
       }
     });
 
     // Update the URL without reloading the page
-    window.history.replaceState({}, '', url);
+    window.history.replaceState({}, "", url);
   }, [params]);
 
   // Set a single param
-  const setParam = useCallback((key: keyof T, value: string | string[] | null) => {
-    setParams(prev => ({
-      ...prev,
-      [key]: value === null ? defaultValues[key] : value
-    }));
-  }, [defaultValues]);
+  const setParam = useCallback(
+    (key: keyof T, value: string | string[] | null) => {
+      setParams((prev) => ({
+        ...prev,
+        [key]: value === null ? defaultValues[key] : value,
+      }));
+    },
+    [defaultValues]
+  );
 
   // Reset all params to default values
   const resetParams = useCallback(() => {

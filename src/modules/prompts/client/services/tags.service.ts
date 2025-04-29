@@ -45,15 +45,15 @@ export const tagService = {
     }
 
     const command: CreateTagCommand = {
-      name: name.trim()
+      name: name.trim(),
     };
 
     const response = await fetch("/api/tags", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(command)
+      body: JSON.stringify(command),
     });
 
     if (!response.ok) {
@@ -62,5 +62,5 @@ export const tagService = {
     }
 
     return await response.json();
-  }
+  },
 };

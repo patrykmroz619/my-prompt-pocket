@@ -1,6 +1,10 @@
 import { z } from "zod";
 import type { APIRoute } from "astro";
-import { MissingParameterDefinitionsError, PromptNameConflictError, UndefinedParametersError } from "@modules/prompts/server/exceptions/prompt.exceptions";
+import {
+  MissingParameterDefinitionsError,
+  PromptNameConflictError,
+  UndefinedParametersError,
+} from "@modules/prompts/server/exceptions/prompt.exceptions";
 import { createPromptSchema } from "@modules/prompts/shared/schemas/create-prompt.schema";
 import { promptService } from "@modules/prompts/server/services/prompt.service";
 import type { IRequestContext } from "@shared/types/types";
@@ -9,7 +13,6 @@ import { PromptFilterParamsSchema } from "@modules/prompts/shared/schemas/prompt
 
 export const POST: APIRoute = async ({ request, locals, cookies }) => {
   try {
-
     // Parse and validate request body
     const rawBody = await request.json();
     const body = createPromptSchema.parse(rawBody);
@@ -17,54 +20,53 @@ export const POST: APIRoute = async ({ request, locals, cookies }) => {
     // Create context object with headers and cookies
     const context: IRequestContext = {
       headers: request.headers,
-      cookies
+      cookies,
     };
 
     // Validate parameters
     await promptService.validatePromptParameters(body.content, body.parameters);
 
     // Create prompt
-    const prompt = await promptService.createPrompt(
-      context,
-      body,
-      locals.user.id
-    );
+    const prompt = await promptService.createPrompt(context, body, locals.user.id);
 
     return new Response(JSON.stringify(prompt), {
-      status: 201
+      status: 201,
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return new Response(JSON.stringify({ error: error.errors }), {
-        status: 400
+        status: 400,
       });
     }
 
     if (error instanceof MissingParameterDefinitionsError) {
-      return new Response(JSON.stringify({
-        error: error.message,
-        parameters: error.parameters
-      }), { status: 400 });
+      return new Response(
+        JSON.stringify({
+          error: error.message,
+          parameters: error.parameters,
+        }),
+        { status: 400 }
+      );
     }
 
     if (error instanceof UndefinedParametersError) {
-      return new Response(JSON.stringify({
-        error: error.message,
-        missingParameters: error.missingParameters
-      }), { status: 400 });
+      return new Response(
+        JSON.stringify({
+          error: error.message,
+          missingParameters: error.missingParameters,
+        }),
+        { status: 400 }
+      );
     }
 
     if (error instanceof PromptNameConflictError) {
       return new Response(JSON.stringify({ error: error.message }), {
-        status: 409
+        status: 409,
       });
     }
 
     console.error("Error creating prompt:", error);
-    return new Response(
-      JSON.stringify({ error: "Internal server error" }),
-      { status: 500 }
-    );
+    return new Response(JSON.stringify({ error: "Internal server error" }), { status: 500 });
   }
 };
 
@@ -92,7 +94,7 @@ export const GET: APIRoute = async ({ request, locals, url, cookies }) => {
         {
           status: 400,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
@@ -100,11 +102,7 @@ export const GET: APIRoute = async ({ request, locals, url, cookies }) => {
 
     // 3. Call Prompt Service
     const requestContext = { headers: request.headers, cookies };
-    const paginatedPrompts = await promptService.getPrompts(
-      requestContext,
-      user.id,
-      validatedFilters,
-    );
+    const paginatedPrompts = await promptService.getPrompts(requestContext, user.id, validatedFilters);
 
     // 4. Return Success Response
     return new Response(JSON.stringify(paginatedPrompts), {
@@ -125,17 +123,14 @@ export const GET: APIRoute = async ({ request, locals, url, cookies }) => {
         {
           status: 400,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
     // Generic Server Error
-    return new Response(
-      JSON.stringify({ message: "Internal Server Error" }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      },
-    );
+    return new Response(JSON.stringify({ message: "Internal Server Error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 };

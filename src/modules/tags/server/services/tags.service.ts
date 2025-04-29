@@ -40,6 +40,7 @@ async function getTagsForUser(userId: string, context: IRequestContext): Promise
 
     // No additional transformations needed for now, repository returns TagDto[]
     return tags;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     // Log the error and re-throw or handle appropriately
     console.error("Error fetching tags in service:", error);
@@ -74,12 +75,7 @@ async function updateTag(
   }
 
   // Check if the new name conflicts with existing ones (excluding current tag)
-  const tagNameExists = await tagRepository.checkTagNameExistsExcludingId(
-    command.name,
-    userId,
-    tagId,
-    context
-  );
+  const tagNameExists = await tagRepository.checkTagNameExistsExcludingId(command.name, userId, tagId, context);
 
   if (tagNameExists) {
     throw new TagAlreadyExistsError(`Tag name '${command.name}' already exists`);
@@ -96,7 +92,7 @@ async function deleteTagService(tagId: string, user: IUser, context: IRequestCon
   // Validate tag ID
   try {
     tagIdSchema.parse(tagId);
-  } catch (error) {
+  } catch {
     throw new Error("Invalid tag ID format");
   }
 
@@ -115,5 +111,5 @@ export const tagService = {
   getTagsForUser,
   validateUpdateTagCommand,
   updateTag,
-  deleteTagService
+  deleteTagService,
 };

@@ -198,7 +198,7 @@ describe("LoginForm", () => {
   describe("Loading State", () => {
     it("should disable form elements during email/password login submission", async () => {
       // Arrange
-      mockFetch.mockReturnValue(new Promise(() => {})); // Never resolving promise
+      mockFetch.mockReturnValue(new Promise(() => null)); // Never resolving promise
       renderLoginForm();
 
       // Act

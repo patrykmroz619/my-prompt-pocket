@@ -138,7 +138,7 @@ export function LoginForm() {
       </Button>
 
       <div className="text-center text-sm">
-        Don't have an account?{" "}
+        Don&apos;t have an account?{" "}
         <a href="/auth/register" className="font-medium text-primary hover:underline">
           Register
         </a>

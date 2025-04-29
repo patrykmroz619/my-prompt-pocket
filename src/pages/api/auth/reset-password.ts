@@ -14,9 +14,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const supabase = createSupabaseServerInstance({ cookies, headers: request.headers });
 
     // First, we need to exchange the token for a session
-    const { data: sessionData, error: sessionError } = await supabase.auth.verifyOtp({
+    const { error: sessionError } = await supabase.auth.verifyOtp({
       token_hash: token,
-      type: 'recovery',
+      type: "recovery",
     });
 
     if (sessionError) {

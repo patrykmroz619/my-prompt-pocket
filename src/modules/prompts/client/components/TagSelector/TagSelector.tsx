@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import type { TagDto } from "@shared/types/types";
-import { Check, ChevronsUpDown, Plus, X, Tag as TagIcon } from "lucide-react";
+import { ChevronsUpDown, Plus, X, Tag as TagIcon } from "lucide-react";
 import {
   Command,
   CommandEmpty,
@@ -12,7 +12,6 @@ import {
 import { Button } from "@shared/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@shared/components/ui/popover";
 import { Badge } from "@shared/components/ui/badge";
-import { cn } from "@shared/utils/cn";
 import { tagService } from "../../services/tags.service";
 
 interface TagSelectorProps {
@@ -100,6 +99,7 @@ export function TagSelector({ selectedTagIds, onChange }: TagSelectorProps) {
       // Clear search
       setSearch("");
       setOpen(false); // Close the popover after creating
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Error creating tag:", error);
       setError(error.message || "Failed to create tag. Please try again.");

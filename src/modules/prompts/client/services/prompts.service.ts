@@ -154,7 +154,7 @@ export const promptService = {
         if (errorData.message) {
           errorMessage = errorData.message;
         }
-      } catch (e) {
+      } catch {
         // If we can't parse the error, just use the default message
       }
       throw new Error(errorMessage);
@@ -190,7 +190,7 @@ export const promptService = {
           if (errorData.error) {
             errorMessage = errorData.error;
           }
-        } catch (e) {
+        } catch {
           // If we can't parse the error, use the default message
         }
       }

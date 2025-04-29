@@ -5,15 +5,11 @@ import {
   DuplicateAssociationError,
   PromptNotFoundError,
   TagNotFoundError,
-  UnauthorizedAssociationError
+  UnauthorizedAssociationError,
 } from "../exceptions/prompt-tag.exceptions";
 
 export const promptTagRepository = {
-  assignTagToPrompt: async (
-    context: IRequestContext,
-    promptId: string,
-    tagId: string
-  ): Promise<PromptTagDto> => {
+  assignTagToPrompt: async (context: IRequestContext, promptId: string, tagId: string): Promise<PromptTagDto> => {
     const supabase = createSupabaseServerInstance(context);
 
     // Check if prompt exists and belongs to the user
@@ -84,11 +80,7 @@ export const promptTagRepository = {
     };
   },
 
-  deleteTagFromPrompt: async (
-    context: IRequestContext,
-    promptId: string,
-    tagId: string
-  ): Promise<void> => {
+  deleteTagFromPrompt: async (context: IRequestContext, promptId: string, tagId: string): Promise<void> => {
     const supabase = createSupabaseServerInstance(context);
 
     // Check if prompt exists and belongs to the user
@@ -106,11 +98,7 @@ export const promptTagRepository = {
     }
 
     // Check if tag exists
-    const { data: tag, error: tagError } = await supabase
-      .from("tags")
-      .select("id, user_id")
-      .eq("id", tagId)
-      .single();
+    const { data: tag, error: tagError } = await supabase.from("tags").select("id, user_id").eq("id", tagId).single();
 
     if (tagError) {
       if (tagError.code === "PGRST116") {

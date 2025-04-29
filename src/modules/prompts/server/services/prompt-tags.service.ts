@@ -2,7 +2,7 @@
 import type { IRequestContext, PromptTagDto } from "@shared/types/types";
 import type {
   ValidatedAssignPromptToTagCommand,
-  ValidatedRemoveTagFromPromptCommand
+  ValidatedRemoveTagFromPromptCommand,
 } from "../../shared/schemas/prompt-tags.schema";
 import { promptTagRepository } from "../repositories/prompt-tag.repository";
 
@@ -17,11 +17,7 @@ export const promptTagsService = {
     command: ValidatedAssignPromptToTagCommand,
     context: IRequestContext
   ): Promise<PromptTagDto> => {
-    return promptTagRepository.assignTagToPrompt(
-      context,
-      command.prompt_id,
-      command.tag_id
-    );
+    return promptTagRepository.assignTagToPrompt(context, command.prompt_id, command.tag_id);
   },
 
   /**
@@ -34,12 +30,8 @@ export const promptTagsService = {
     command: ValidatedRemoveTagFromPromptCommand,
     context: IRequestContext
   ): Promise<void> => {
-    await promptTagRepository.deleteTagFromPrompt(
-      context,
-      command.prompt_id,
-      command.tag_id
-    );
+    await promptTagRepository.deleteTagFromPrompt(context, command.prompt_id, command.tag_id);
 
     // No return value needed as we'll return 204 No Content
-  }
+  },
 };
