@@ -36,6 +36,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     });
 
     if (error) {
+      console.error("Supabase signUp error:", error);
       return new Response(JSON.stringify({ error: error.message }), {
         status: 400,
       });
