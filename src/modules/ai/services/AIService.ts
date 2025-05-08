@@ -1,9 +1,10 @@
 import OpenAI from "openai";
 import type { ITextCompletionParams } from "../types";
+import { getEnv } from "@shared/utils/getEnv";
 
 const openai = new OpenAI({
-  baseURL: import.meta.env.OPENROUTER_BASE_URL,
-  apiKey: import.meta.env.OPENROUTER_API_KEY,
+  baseURL: getEnv("OPENROUTER_BASE_URL"),
+  apiKey: getEnv("OPENROUTER_API_KEY"),
 });
 
 const MODEL = "deepseek/deepseek-r1:free";

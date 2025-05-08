@@ -1,17 +1,18 @@
 /**
  * E2E test setup and helpers
  */
-import type { Page } from '@playwright/test';
-import { LoginPage } from './page-objects/login.page';
+import type { Page } from "@playwright/test";
+import { LoginPage } from "./page-objects/login.page";
+import { getEnv } from "@shared/utils/getEnv";
 
 /**
  * Test user data
  */
 export const TEST_USERS = {
   standard: {
-    email: process.env.E2E_USER_EMAIL ?? '',
-    password: process.env.E2E_USER_PASSWORD ?? '',
-  }
+    email: getEnv("E2E_USER_EMAIL"),
+    password: getEnv("E2E_USER_PASSWORD"),
+  },
 };
 
 /**
@@ -24,7 +25,7 @@ export async function authenticateUser(page: Page, email: string, password: stri
   await loginPage.goto();
   await loginPage.login(email, password);
   // Wait for successful navigation to main page
-  await page.waitForURL('/');
+  await page.waitForURL("/");
 }
 
 /**
@@ -37,5 +38,5 @@ export async function resetTestData(): Promise<void> {
   // In a real implementation, this might call an API to reset/setup test data
   // For example:
   // await fetch('http://localhost:8000/api/test/reset-data', { method: 'POST' });
-  console.log('Resetting test data');
+  console.log("Resetting test data");
 }
