@@ -7,14 +7,12 @@ const openai = new OpenAI({
   apiKey: getEnv("OPENROUTER_API_KEY"),
 });
 
-const MODEL = "deepseek/deepseek-r1:free";
-
 const textCompletion = async (params: ITextCompletionParams) => {
-  const { messages } = params;
+  const { messages, model } = params;
 
   try {
     const response = await openai.chat.completions.create({
-      model: MODEL,
+      model,
       messages,
       response_format: {
         type: "json_object",

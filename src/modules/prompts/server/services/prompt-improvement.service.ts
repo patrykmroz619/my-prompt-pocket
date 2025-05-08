@@ -1,6 +1,7 @@
 import { z } from "zod"; // Import Zod
 import type { PromptImprovementDto } from "@shared/types/types";
 import { AIService } from "@modules/ai/services/AIService";
+import { getEnv } from "@shared/utils/getEnv";
 
 export interface ImprovePromptParams {
   content: string;
@@ -42,6 +43,7 @@ Maintain a professional and analytical tone. Do not include any conversational f
   try {
     // Send the request to OpenRouter
     const aiMessage = await AIService.textCompletion({
+      model: getEnv("PROMPTS_IMPROVEMENT_MODEL"),
       messages: [
         { role: "system", content: systemMessage },
         { role: "user", content: userMessage },
