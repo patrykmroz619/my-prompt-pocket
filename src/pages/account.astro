@@ -1,0 +1,15 @@
+---
+import { UpdatePasswordForm } from "@modules/account/components/UpdatePasswordForm";
+import AppLayout from "@shared/components/layout/AppLayout/AppLayout.astro";
+---
+
+<AppLayout>
+  <h1 class="mb-6 text-2xl font-semibold">Account Settings</h1>
+  <section class="mb-8 space-y-6">
+    <div class="space-y-2">
+      <h2 class="text-lg font-medium">Set new password</h2>
+      <p class="text-sm text-muted-foreground">Enter and confirm your new password for your account.</p>
+    </div>
+    <UpdatePasswordForm client:load />
+  </section>
+</AppLayout>

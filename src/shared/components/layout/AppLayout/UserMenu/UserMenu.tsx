@@ -36,6 +36,10 @@ export function UserMenu({ userData }: UserMenuProps) {
     }
   };
 
+  const handleAccount = () => {
+    window.location.href = "/account";
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="hidden md:flex">
@@ -67,7 +71,7 @@ export function UserMenu({ userData }: UserMenuProps) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem disabled>
+        <DropdownMenuItem onClick={handleAccount}>
           <User2 />
           Account
         </DropdownMenuItem>

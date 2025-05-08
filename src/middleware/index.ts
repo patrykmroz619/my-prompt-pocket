@@ -8,16 +8,14 @@ const PUBLIC_PATHS = [
   "/auth/login",
   "/auth/register",
   "/auth/forgot-password",
-  "/auth/reset-password",
   "/auth/callback", // OAuth callback URL
   // Auth API endpoints
   "/api/auth/login",
   "/api/auth/register",
   "/api/auth/logout",
   "/api/auth/forgot-password",
-  "/api/auth/reset-password",
+  "/api/auth/confirm",
   "/api/auth/callback", // OAuth callback handling
-  "/api/prompts/improve",
 ];
 
 export const onRequest = defineMiddleware(async ({ locals, cookies, url, request, redirect }, next) => {
