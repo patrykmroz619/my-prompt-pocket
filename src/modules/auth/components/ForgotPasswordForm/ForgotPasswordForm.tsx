@@ -7,6 +7,7 @@ import { useState } from "react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@shared/components/ui/form";
 import { Input } from "@shared/components/ui/input";
 import { Button } from "@shared/components/ui/button";
+import { authService } from "@modules/auth/services/auth.service"; // Import the auth service
 
 // Schema for forgot password form validation
 const forgotPasswordSchema = z.object({
@@ -37,29 +38,13 @@ export function ForgotPasswordForm({ onSubmit }: ForgotPasswordFormProps) {
       // If an external onSubmit handler is provided, use it
       if (onSubmit) {
         await onSubmit(data.email);
-        setSubmittedEmail(data.email);
-        setIsSubmitted(true);
-        return;
+      } else {
+        // Otherwise, call the auth service
+        await authService.forgotPassword(data.email);
+        toast.success("Password reset link sent to your email");
       }
-
-      // Otherwise, call the API endpoint directly
-      const response = await fetch("/api/auth/forgot-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: data.email }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || "Failed to request password reset");
-      }
-
       setSubmittedEmail(data.email);
       setIsSubmitted(true);
-      toast.success("Password reset link sent to your email");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to request password reset. Please try again.");
     }

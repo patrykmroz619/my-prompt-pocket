@@ -8,6 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@shared/components/ui/input";
 import { Button } from "@shared/components/ui/button";
 import { useNavigate } from "@shared/hooks/useNavigate";
+import { authService } from "@modules/auth/services/auth.service"; // Import authService
 
 // Password validation schema with strength requirements
 const passwordSchema = z.string().min(8, { message: "Password must be at least 8 characters" });
@@ -105,44 +106,27 @@ export function RegisterForm() {
 
   async function handleSubmit(data: RegisterFormValues) {
     try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-        }),
+      // Use authService.register instead of fetch
+      await authService.register({
+        email: data.email,
+        password: data.password,
       });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        // Handle validation errors or other error messages from the server
-        if (result.details) {
-          // Handle specific field errors if available
-          if (result.details.email?._errors) {
-            form.setError("email", { message: result.details.email._errors[0] });
-          }
-          if (result.details.password?._errors) {
-            form.setError("password", { message: result.details.password._errors[0] });
-          }
-          toast.error("Registration failed: Please check the form for errors");
-        } else {
-          toast.error(result.error || "Failed to register. Please try again.");
-        }
-        return;
-      }
 
       // Registration successful
       toast.success("Registration successful! You are now logged in.");
 
       // Automatic redirect to prompts page (or dashboard)
       navigate.navigate("/");
-    } catch (error) {
-      console.error("Registration error:", error);
-      toast.error("An unexpected error occurred. Please try again later.");
+    } catch (error: unknown) {
+      let errorMessage = "An unexpected error occurred. Please try again later.";
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === "string") {
+        errorMessage = error;
+      }
+
+      toast.error(errorMessage);
     }
   }
 

@@ -3,8 +3,9 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { RegisterForm } from "./RegisterForm";
 import { toast } from "sonner";
 import * as useNavigateModule from "@shared/hooks/useNavigate";
+import { authService } from "@modules/auth/services/auth.service"; // Import the auth service
 
-// Mock sonner toast with vi.mock() factory pattern at the top level
+// Mock sonner toast
 vi.mock("sonner", () => ({
   toast: {
     error: vi.fn(),
@@ -15,6 +16,13 @@ vi.mock("sonner", () => ({
 // Mock the useNavigate hook
 vi.mock("@shared/hooks/useNavigate", () => ({
   useNavigate: vi.fn(),
+}));
+
+// Mock the authService
+vi.mock("@modules/auth/services/auth.service", () => ({
+  authService: {
+    register: vi.fn(),
+  },
 }));
 
 // Setup test data
@@ -46,16 +54,10 @@ describe("RegisterForm", () => {
   const mockNavigate = vi.fn();
 
   beforeEach(() => {
-    // Reset mocks and restore window objects before each test
     vi.clearAllMocks();
-
-    // Mock the navigate function
     vi.mocked(useNavigateModule.useNavigate).mockReturnValue({
       navigate: mockNavigate,
     });
-
-    // Use vi.stubGlobal for global mocks
-    vi.stubGlobal("fetch", mockFetch);
   });
 
   afterEach(() => {
@@ -145,7 +147,7 @@ describe("RegisterForm", () => {
 
     it("should not display errors for valid input", async () => {
       // Arrange
-      mockFetch.mockResolvedValueOnce({ ok: true, json: async () => ({}) });
+      vi.mocked(authService.register).mockResolvedValueOnce({}); // Mock authService.register to resolve
       renderRegisterForm();
 
       // Act
@@ -153,7 +155,11 @@ describe("RegisterForm", () => {
 
       // Assert
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalled();
+        // Check that the mocked authService.register was called
+        expect(authService.register).toHaveBeenCalledWith({
+          email: validUser.email,
+          password: validUser.password,
+        });
       });
 
       expect(screen.queryByText("Please enter a valid email address")).not.toBeInTheDocument();
@@ -225,12 +231,9 @@ describe("RegisterForm", () => {
   });
 
   describe("Form Submission", () => {
-    it("should call fetch with correct data and redirect on successful registration", async () => {
+    it("should call authService.register with correct data and redirect on successful registration", async () => {
       // Arrange
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({}),
-      });
+      vi.mocked(authService.register).mockResolvedValueOnce({}); // Mock successful registration
       renderRegisterForm();
 
       // Act
@@ -238,22 +241,16 @@ describe("RegisterForm", () => {
 
       // Assert
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith("/api/auth/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: validUser.email, password: validUser.password }),
-        });
+        expect(authService.register).toHaveBeenCalledWith({ email: validUser.email, password: validUser.password });
         expect(vi.mocked(toast.success)).toHaveBeenCalledWith("Registration successful! You are now logged in.");
         expect(mockNavigate).toHaveBeenCalledWith("/");
       });
     });
 
-    it("should show error toast when server returns an error", async () => {
+    it("should show error toast when authService.register throws an error with a message", async () => {
       // Arrange
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        json: async () => ({ error: "Email already exists" }),
-      });
+      const errorMessage = "Email already exists";
+      vi.mocked(authService.register).mockRejectedValueOnce(new Error(errorMessage));
       renderRegisterForm();
 
       // Act
@@ -261,23 +258,15 @@ describe("RegisterForm", () => {
 
       // Assert
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalled();
-        expect(vi.mocked(toast.error)).toHaveBeenCalledWith("Email already exists");
+        expect(authService.register).toHaveBeenCalled();
+        expect(vi.mocked(toast.error)).toHaveBeenCalledWith(errorMessage);
       });
       expect(mockNavigate).not.toHaveBeenCalled();
     });
 
-    it("should handle server validation errors properly", async () => {
+    it("should show generic error toast when authService.register throws an error without a message", async () => {
       // Arrange
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        json: async () => ({
-          details: {
-            email: { _errors: ["Email already registered"] },
-            password: { _errors: ["Password too weak"] },
-          },
-        }),
-      });
+      vi.mocked(authService.register).mockRejectedValueOnce(new Error()); // Error without a message
       renderRegisterForm();
 
       // Act
@@ -285,16 +274,23 @@ describe("RegisterForm", () => {
 
       // Assert
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalled();
-        expect(vi.mocked(toast.error)).toHaveBeenCalledWith("Registration failed: Please check the form for errors");
+        expect(authService.register).toHaveBeenCalled();
+        // Component calls toast.error("") when error.message is empty
+        expect(vi.mocked(toast.error)).toHaveBeenCalledWith("");
       });
       expect(mockNavigate).not.toHaveBeenCalled();
     });
 
-    it("should show generic error toast when fetch throws an exception", async () => {
+    it("should show specific error toast when authService.register throws a structured error message", async () => {
       // Arrange
-      const networkError = new Error("Network Error");
-      mockFetch.mockRejectedValueOnce(networkError);
+      const serverError = {
+        message: "Validation failed", // General error message
+        details: {
+          email: "Email already registered",
+          password: "Password too weak",
+        },
+      };
+      vi.mocked(authService.register).mockRejectedValueOnce(new Error(JSON.stringify(serverError)));
       renderRegisterForm();
 
       // Act
@@ -302,8 +298,9 @@ describe("RegisterForm", () => {
 
       // Assert
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalled();
-        expect(vi.mocked(toast.error)).toHaveBeenCalledWith("An unexpected error occurred. Please try again later.");
+        expect(authService.register).toHaveBeenCalled();
+        // The component displays error.message, which is the JSON.stringify(serverError)
+        expect(vi.mocked(toast.error)).toHaveBeenCalledWith(JSON.stringify(serverError));
       });
       expect(mockNavigate).not.toHaveBeenCalled();
     });

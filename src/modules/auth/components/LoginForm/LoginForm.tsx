@@ -7,6 +7,7 @@ import { useState } from "react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@shared/components/ui/form";
 import { Input } from "@shared/components/ui/input";
 import { Button } from "@shared/components/ui/button";
+import { authService, type LoginCredentials } from "@modules/auth/services/auth.service"; // Import the auth service
 
 // Schema for login form validation
 const loginSchema = z.object({
@@ -30,24 +31,7 @@ export function LoginForm() {
   async function handleSubmit(data: LoginFormValues) {
     try {
       setIsLoading(true);
-
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || "Failed to log in");
-      }
-
+      await authService.login(data as LoginCredentials);
       // Redirect to home page after successful login
       window.location.href = "/";
     } catch (error) {
@@ -60,11 +44,10 @@ export function LoginForm() {
   const handleGoogleLogin = async () => {
     try {
       setIsLoading(true);
-      // Redirect to the Google OAuth endpoint
-      window.location.href = "/api/auth/google";
+      authService.loginWithGoogle();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to log in with Google. Please try again.");
-      setIsLoading(false);
+      setIsLoading(false); // Ensure loading state is reset on error
     }
   };
 
