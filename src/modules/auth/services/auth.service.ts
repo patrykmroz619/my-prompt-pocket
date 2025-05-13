@@ -35,7 +35,7 @@ export const authService = {
     return handleApiResponse(response);
   },
 
-  loginWithGoogle(): void {
+  loginWithGoogle() {
     window.location.href = "/api/auth/google";
   },
 
