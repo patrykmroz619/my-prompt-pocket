@@ -1,7 +1,7 @@
 ---
 import "@shared/styles/global.css";
 import { Toaster } from "@shared/components/ui/sonner";
-import authBackgroundImage from "@shared/assets/auth-background.png";
+import authBackgroundImage from "@shared/assets/auth-background.webp";
 
 interface Props {
   title?: string;
@@ -19,7 +19,7 @@ const { title = "My Prompt Pocket" } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body>
+  <body class="dark">
     <div class="grid min-h-svh lg:grid-cols-2">
       <div class="flex flex-col gap-4 p-6 md:p-10">
         <div class="flex justify-center gap-2 md:justify-start">
@@ -40,7 +40,7 @@ const { title = "My Prompt Pocket" } = Astro.props;
         <img
           src={authBackgroundImage.src}
           alt="Background"
-          class="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+          class="absolute inset-0 h-full w-full object-cover object-right"
         />
       </div>
     </div>
