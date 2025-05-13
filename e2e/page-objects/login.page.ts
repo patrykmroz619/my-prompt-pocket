@@ -1,7 +1,7 @@
 /**
  * Page Object Model for the Login page
  */
-import type { Locator, Page } from '@playwright/test';
+import type { Locator, Page } from "@playwright/test";
 
 export class LoginPage {
   readonly page: Page;
@@ -11,25 +11,24 @@ export class LoginPage {
   readonly forgotPasswordLink: Locator;
   readonly registerLink: Locator;
   readonly googleLoginButton: Locator;
-  readonly errorToast: Locator;
+  readonly toast: Locator;
 
   constructor(page: Page) {
     this.page = page;
-    this.emailInput = page.getByLabel('Email');
-    this.passwordInput = page.getByLabel('Password');
-    this.loginButton = page.getByRole('button', { name: 'Log in', exact: false });
-    this.forgotPasswordLink = page.getByRole('link', { name: 'Forgot password?' });
-    this.registerLink = page.getByRole('link', { name: 'Register' });
-    this.googleLoginButton = page.getByRole('button', { name: 'Google' });
-    // Error messages appear in toast notifications
-    this.errorToast = page.getByText('Invalid login credentials');
+    this.emailInput = page.getByTestId("login-email-input");
+    this.passwordInput = page.getByTestId("login-password-input");
+    this.loginButton = page.getByTestId("login-submit-button");
+    this.forgotPasswordLink = page.getByTestId("login-forgot-password-link");
+    this.registerLink = page.getByTestId("login-register-link");
+    this.googleLoginButton = page.getByTestId("login-google-button");
+    this.toast = page.locator("[data-sonner-toast]");
   }
 
   /**
    * Navigate to the login page
    */
   async goto() {
-    await this.page.goto('/auth/login');
+    await this.page.goto("/auth/login");
   }
 
   /**
@@ -37,17 +36,7 @@ export class LoginPage {
    */
   async login(email: string, password: string) {
     await this.emailInput.fill(email);
-    await this.emailInput.press('Tab');
     await this.passwordInput.fill(password);
     await this.loginButton.click();
-  }
-
-  /**
-   * Check if user is redirected to the main page after successful login
-   */
-  async isLoggedIn() {
-    // Wait for navigation to the main page after login
-    await this.page.waitForURL('/');
-    return this.page.url().endsWith('/');
   }
 }

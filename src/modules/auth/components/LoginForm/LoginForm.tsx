@@ -62,7 +62,13 @@ export function LoginForm() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="you@example.com" type="email" disabled={isLoading} {...field} />
+                  <Input
+                    type="email"
+                    placeholder="you@example.com"
+                    disabled={isLoading}
+                    {...field}
+                    data-testid="login-email-input"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -76,19 +82,23 @@ export function LoginForm() {
               <FormItem>
                 <div className="flex items-center justify-between">
                   <FormLabel>Password</FormLabel>
-                  <a href="/auth/forgot-password" className="text-xs text-muted-foreground hover:text-primary">
+                  <a
+                    href="/auth/forgot-password"
+                    className="text-xs text-muted-foreground hover:text-primary"
+                    data-testid="login-forgot-password-link"
+                  >
                     Forgot password?
                   </a>
                 </div>
                 <FormControl>
-                  <Input type="password" disabled={isLoading} {...field} />
+                  <Input type="password" disabled={isLoading} {...field} data-testid="login-password-input" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" className="w-full" disabled={isLoading} data-testid="login-submit-button">
             {isLoading ? "Logging in..." : "Log in"}
           </Button>
         </form>
@@ -101,7 +111,14 @@ export function LoginForm() {
         <span className="relative bg-card px-2 text-xs uppercase text-muted-foreground">Or continue with</span>
       </div>
 
-      <Button type="button" variant="outline" className="w-full" onClick={handleGoogleLogin} disabled={isLoading}>
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full"
+        onClick={handleGoogleLogin}
+        disabled={isLoading}
+        data-testid="login-google-button"
+      >
         <svg
           className="mr-2 h-4 w-4"
           aria-hidden="true"
@@ -122,7 +139,7 @@ export function LoginForm() {
 
       <div className="text-center text-sm">
         Don&apos;t have an account?{" "}
-        <a href="/auth/register" className="font-medium text-primary hover:underline">
+        <a href="/auth/register" className="font-medium text-primary hover:underline" data-testid="login-register-link">
           Register
         </a>
       </div>
