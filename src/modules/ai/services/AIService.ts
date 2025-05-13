@@ -20,12 +20,12 @@ const textCompletion = async (params: ITextCompletionParams) => {
     });
 
     if (!response.choices || response.choices.length === 0) {
-      throw new Error("No choices returned from OpenAI");
+      throw new Error(`No choices returned from OpenAI SDK. Model: ${model}, response: ${JSON.stringify(response)}`);
     }
 
     return response.choices[0]?.message.content ?? null;
   } catch (error) {
-    console.error("Error in text completion:", error);
+    console.error(`Error in text completion. Model ${model}, error:`, error);
     throw new Error("Failed to generate text completion");
   }
 };
