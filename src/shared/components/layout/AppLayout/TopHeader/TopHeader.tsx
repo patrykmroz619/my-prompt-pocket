@@ -9,7 +9,7 @@ export function TopHeader(props: TopHeaderProps) {
 
   return (
     <header className="border-b">
-      <div className="container mx-auto flex items-center gap-4 p-4">{children}</div>
+      <div className="max-w-7xl mx-auto flex items-center gap-4 p-4">{children}</div>
     </header>
   );
 }

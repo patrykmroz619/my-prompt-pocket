@@ -19,7 +19,7 @@ export function MainNavigation(props: MainNavigationProps) {
         {navigationItems.map((item) => (
           <NavigationMenuItem
             key={item.href}
-            className={currentPath === item.href ? "bg-accent text-accent-foreground" : ""}
+            className={currentPath === item.href ? "bg-accent text-accent-foreground rounded-sm" : ""}
           >
             <NavigationMenuLink href={item.href} className="flex flex-row text-nowrap items-center space-x-2">
               {item.label}

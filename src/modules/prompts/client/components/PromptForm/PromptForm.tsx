@@ -161,7 +161,7 @@ export function PromptForm({ initialData, onSubmit }: PromptFormProps) {
                 <FormControl>
                   <Textarea
                     placeholder="Enter prompt content... Use {{parameter}} syntax for parameters"
-                    className="h-32 font-mono"
+                    className="h-64 font-mono"
                     {...field}
                   />
                 </FormControl>

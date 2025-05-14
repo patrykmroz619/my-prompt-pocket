@@ -69,9 +69,11 @@ export function MobileNavigation({ userData }: MobileNavigationProps) {
             </DropdownMenuItem>
           ))}
 
-          <DropdownMenuItem disabled>
-            <User2 />
-            Account
+          <DropdownMenuItem>
+            <a href="/account" className="flex items-center gap-2">
+              <User2 />
+              Account
+            </a>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleLogout} color="red">
             <LogOut />
