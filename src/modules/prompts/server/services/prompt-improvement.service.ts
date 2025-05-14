@@ -2,6 +2,7 @@ import { z } from "zod"; // Import Zod
 import type { PromptImprovementDto } from "@shared/types/types";
 import { AIService } from "@modules/ai/services/AIService";
 import { getEnv } from "@shared/utils/getEnv";
+import { improveUserPrompt } from "../prompts/improve-user-prompt";
 
 export interface ImprovePromptParams {
   content: string;
@@ -15,38 +16,14 @@ const AIResponseSchema = z.object({
   explanation: z.string(),
 });
 
-async function improve({ content, instruction }: ImprovePromptParams): Promise<PromptImprovementDto> {
-  const systemMessage = `Act as an expert prompt engineer specializing in refining prompts for Large Language Models (LLMs).
-Your goal is to analyze the user-provided prompt and rewrite it to be clearer, more specific, and more effective.
-
-Focus on:
-1.  **Clarity:** Eliminate ambiguity and jargon.
-2.  **Specificity:** Add necessary details and context.
-3.  **Structure:** Improve the organization for better LLM understanding.
-4.  **Effectiveness:** Ensure the prompt directly asks for the desired outcome.
-5.  **User Intent:** Consider the user's instructions and tailor the prompt accordingly.
-
-User instruction:
-${instruction ? instruction : "No specific instructions provided."}
-
-Response MUST BE a valid JSON object with the following structure without any additional text or characters:
-{
-  "_thoughts": "[Your brief thought process for the improvements made]",
-  "improved_content": "[Your rewritten, improved version of the prompt]",
-  "explanation": "[A brief explanation of the key changes you made and why they improve the prompt, referencing the focus areas above.]"
-}
-
-Maintain a professional and analytical tone. Do not include any conversational filler or introductory/concluding remarks outside the specified JSON structure.`;
-
-  const userMessage = content;
-
+async function improve({ content }: ImprovePromptParams): Promise<PromptImprovementDto> {
   try {
     // Send the request to OpenRouter
     const aiMessage = await AIService.textCompletion({
       model: getEnv("PROMPTS_IMPROVEMENT_MODEL"),
       messages: [
-        { role: "system", content: systemMessage },
-        { role: "user", content: userMessage },
+        { role: "system", content: improveUserPrompt() },
+        { role: "user", content },
       ],
     });
 
