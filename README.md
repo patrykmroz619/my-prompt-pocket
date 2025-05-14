@@ -45,7 +45,7 @@ MyPromptPocket is a robust web application designed to streamline the management
    - Start Supabase locally:
 
      ```bash
-     supabase start
+     npm run supabase:start
      ```
 
    - Copy the generated environment variables to `.env`:
@@ -66,7 +66,7 @@ MyPromptPocket is a robust web application designed to streamline the management
    npm run dev
    ```
 
-6. Open your browser at `http://localhost:4321` to view the application.
+6. Open your browser at `http://localhost:3000` to view the application.
 
 ## Available Scripts
 
@@ -74,6 +74,10 @@ MyPromptPocket is a robust web application designed to streamline the management
 - **npm run build**: Builds the application for production.
 - **npm run start**: Starts the production preview server.
 - **npm run astro**: Runs Astro CLI commands.
+- **npm run test**: Runs unit and integration tests.
+- **npm run test:e2e**: Runs end-to-end tests.
+- **npm run lint**: Lints the codebase.
+- **npm run lint:fix**: Lints the codebase and automatically fixes issues.
 
 ## Project Scope
 
