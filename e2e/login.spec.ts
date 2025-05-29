@@ -26,7 +26,7 @@ test.describe("Email/Password Login", () => {
     await loginPage.goto();
 
     // Verify we're on the login page
-    await expect(page).toHaveTitle(/Login | MyPromptPocket/);
+    await expect(page.getByText("Welcome back")).toBeVisible();
   });
 
   test("should display login form with all elements", async () => {
