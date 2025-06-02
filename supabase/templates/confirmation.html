@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Reset Your Password - My Prompt Pocket</title>
+    <title>Confirm Your Email - My Prompt Pocket</title>
     <!--[if mso]>
       <noscript>
         <xml>
@@ -161,19 +161,19 @@
                     line-height: 1.2;
                   "
                 >
-                  Reset Your Password
+                  Welcome to My Prompt Pocket!
                 </h2>
 
                 <!-- Description -->
                 <p style="margin: 0 0 24px 0; font-size: 16px; line-height: 1.5; color: #b4b8c0; text-align: center">
-                  We received a request to reset your password for your My Prompt Pocket account. Click the button below
-                  to create a new password.
+                  Thank you for signing up! To complete your registration and start building your AI prompt library,
+                  please confirm your email address by clicking the button below.
                 </p>
 
                 <!-- CTA Button -->
                 <div style="text-align: center; margin: 32px 0">
                   <a
-                    href="{{ .SiteURL }}/api/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/account"
+                    href="{{ .ConfirmationURL }}"
                     style="
                       display: inline-block;
                       background-color: #00bc7d;
@@ -186,11 +186,11 @@
                       line-height: 1;
                     "
                   >
-                    Reset My Password
+                    Confirm My Email
                   </a>
                 </div>
 
-                <!-- Security note -->
+                <!-- Welcome note -->
                 <div
                   style="
                     background-color: rgba(100, 181, 166, 0.05);
@@ -201,9 +201,9 @@
                   "
                 >
                   <p style="margin: 0; font-size: 14px; color: #b4b8c0; line-height: 1.4">
-                    <strong style="color: #00bc7d">🛡️ Security Notice:</strong><br />
-                    This link will expire in 1 hour for your security. If you didn't request this password reset, you
-                    can safely ignore this email.
+                    <strong style="color: #00bc7d">🚀 Get Started:</strong><br />
+                    Once confirmed, you'll have access to create, organize, and manage your AI prompts with powerful
+                    features like parameterization, tagging, and AI-assisted improvements.
                   </p>
                 </div>
 
@@ -213,11 +213,8 @@
                     Button not working? Copy and paste this link into your browser:
                   </p>
                   <p style="margin: 0; font-size: 12px; word-break: break-all; text-align: center">
-                    <a
-                      href="{{ .SiteURL }}/api/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/account"
-                      style="color: #00bc7d; text-decoration: underline"
-                    >
-                      {{ .SiteURL }}/api/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/account
+                    <a href="{{ .ConfirmationURL }}" style="color: #00bc7d; text-decoration: underline">
+                      {{ .ConfirmationURL }}
                     </a>
                   </p>
                 </div>
