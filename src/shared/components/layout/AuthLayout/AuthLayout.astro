@@ -1,48 +1,32 @@
 ---
-import "@shared/styles/global.css";
-import { Toaster } from "@shared/components/ui/sonner";
 import authBackgroundImage from "@shared/assets/auth-background.webp";
 import { BoxIcon } from "lucide-react";
-
-interface Props {
-  title?: string;
-}
+import BaseLayout from "../BaseLayout/BaseLayout.astro";
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content={Astro.generator} />
-    <title>My Prompt Pocket</title>
-  </head>
-  <body class="dark">
-    <div class="grid min-h-svh lg:grid-cols-2">
-      <div class="flex flex-col gap-4 p-6 md:p-10">
-        <div class="flex justify-center gap-2 md:justify-start">
-          <a href="/" class="flex items-center gap-2 font-medium">
-            <div class="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <BoxIcon />
-            </div>
-            My Prompt Pocket
-          </a>
-        </div>
-        <div class="flex flex-1 items-center justify-center">
-          <div class="w-full max-w-md space-y-6">
-            <slot />
+<BaseLayout>
+  <div class="grid min-h-svh lg:grid-cols-2">
+    <div class="flex flex-col gap-4 p-6 md:p-10">
+      <div class="flex justify-center gap-2 md:justify-start">
+        <a href="/" class="flex items-center gap-2 font-medium">
+          <div class="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
+            <BoxIcon />
           </div>
-        </div>
+          My Prompt Pocket
+        </a>
       </div>
-      <div class="relative hidden bg-muted lg:block">
-        <img
-          src={authBackgroundImage.src}
-          alt="Background"
-          class="absolute inset-0 h-full w-full object-cover object-right"
-        />
+      <div class="flex flex-1 items-center justify-center">
+        <div class="w-full max-w-md space-y-6">
+          <slot />
+        </div>
       </div>
     </div>
-    <Toaster client:load />
-  </body>
-</html>
+    <div class="relative hidden bg-muted lg:block">
+      <img
+        src={authBackgroundImage.src}
+        alt="Background"
+        class="absolute inset-0 h-full w-full object-cover object-right"
+      />
+    </div>
+  </div>
+</BaseLayout>

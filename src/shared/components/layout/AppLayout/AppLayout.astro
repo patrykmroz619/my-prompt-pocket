@@ -1,53 +1,28 @@
 ---
-import "@shared/styles/global.css";
-import { Toaster } from "@shared/components/ui/sonner";
 import { TopHeader } from "./TopHeader";
 import { Logo } from "./Logo";
 import { MainNavigation } from "./MainNavigation";
 import { UserMenu } from "./UserMenu";
 import { MobileNavigation } from "./MobileNavigation";
+import BaseLayout from "../BaseLayout/BaseLayout.astro";
+import { ModeToggle } from "@shared/components/ui/mode-toggle";
 
 const pathname = Astro.url.pathname;
 const { user } = Astro.locals;
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content={Astro.generator} />
-    <title>My Prompt Pocket</title>
-  </head>
-  <body class="dark">
-    <div class="min-h-screen bg-background">
-      <TopHeader>
-        <Logo />
-        <MainNavigation currentPath={pathname} />
-        <div class="grow"></div>
-        <UserMenu client:load userData={user} />
-        <MobileNavigation client:load userData={user} />
-      </TopHeader>
-      <div class="px-4 py-8 max-w-7xl mx-auto">
-        <slot />
-      </div>
+<BaseLayout>
+  <div class="min-h-screen bg-background">
+    <TopHeader>
+      <Logo />
+      <MainNavigation currentPath={pathname} />
+      <div class="grow"></div>
+      <ModeToggle client:load />
+      <UserMenu client:load userData={user} />
+      <MobileNavigation client:load userData={user} />
+    </TopHeader>
+    <div class="px-4 py-8 max-w-7xl mx-auto">
+      <slot />
     </div>
-    <Toaster client:load richColors closeButton />
-  </body>
-</html>
-
-<style>
-  html,
-  body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-  }
-
-  main {
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-</style>
+  </div>
+</BaseLayout>
